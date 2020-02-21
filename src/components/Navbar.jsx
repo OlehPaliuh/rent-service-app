@@ -1,5 +1,4 @@
 import React, { Component } from "react"
-// import Button from "../"
 
 class Navbar extends Component {
     render() {
@@ -17,6 +16,9 @@ class Navbar extends Component {
                         </li>
                         <li className="nav-item">
                             <a className="nav-link" href="/#">Link</a>
+                        </li>
+                        <li className="nav-item">
+                            <a className="nav-link" href="/about/">About</a>
                         </li>
                         <li className="nav-item dropdown">
                             <a className="nav-link dropdown-toggle" href="/#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
