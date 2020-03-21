@@ -1,5 +1,5 @@
 import React from "react"
-import Navbar from './Navbar';
+import "../index.css"
 
 class RentalPage extends React.Component {
     constructor(props) {
@@ -26,8 +26,7 @@ class RentalPage extends React.Component {
 
     render() {
         return (
-            <div>
-                <Navbar />
+            <div className="container ownContainer">
                 <div>{this.state.rentalItem.id}</div>
                 <div>{this.state.rentalItem.address}</div>
                 <div>{this.state.rentalItem.description}</div>

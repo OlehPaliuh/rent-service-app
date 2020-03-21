@@ -1,11 +1,10 @@
 import React, {Component} from "react"
-import Navbar from "./Navbar"
+import "../index.css"
 
 class AboutComponent extends Component{
     render() {
         return (
-            <div>
-                <Navbar />
+            <div className="container ownContainer">
                 <h2>About Component</h2>
             </div>
         )

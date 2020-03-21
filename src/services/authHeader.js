@@ -1,0 +1,54 @@
+import {userService} from "./userService"
+
+export const authHeader = {
+    addAuthHeader,
+    handleResponse,
+    getAccessToken
+};
+
+function addAuthHeader() {
+    // return authorization header with basic auth credentials
+    let user = JSON.parse(localStorage.getItem('user'));
+
+    if (user && user.accessToken) {
+        console.log("HEADER info " + user.accessToken);
+        return { 'Authorization': 'Bearer ' + user.accessToken };
+    } else {
+        return {};
+    }
+}
+
+function handleResponse(response) {
+    return response.text().then(text => {
+        const data = text && JSON.parse(text);
+        if (!response.ok) {
+            if (response.status === 401) {
+                const user = JSON.parse(localStorage.getItem('user'));
+                getAccessToken(user.refreshToken);
+            } else if(data.message === "REFRESH_TOKEN_NOT_VALID") {
+                userService.logout();
+            }
+            const error = (data && data.message) || response.statusText;
+            return Promise.reject(error);
+        }
+
+        return data;
+    });
+}
+
+function getAccessToken(refreshToken) {
+    const requestOptions = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    };
+
+    return fetch("/api/updateAccessToken?refreshToken=" + refreshToken, requestOptions)
+        .then(handleResponse)
+        .then(user => {
+            if (user) {
+                localStorage.setItem('user', JSON.stringify(user));
+            } 
+
+            return user;
+        });
+}
