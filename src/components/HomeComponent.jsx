@@ -1,36 +1,32 @@
 import React, { Component } from "react"
 import RentalCard from './RentalCard'
-import Navbar from './Navbar';
-
+import { realtyService } from '../services/realtyService';
 
 class HomeComponent extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            rentalArray: []
+            rentalArray: [],
+            user: {},
+            loading: false
         }
     }
 
     componentWillMount() {
-        this.fetchRealty()
+        this.setState({
+            user: JSON.parse(localStorage.getItem('user')),
+            loading: true
+        });
+        realtyService.getAllRealty().then(array => this.setState({ rentalArray: array.map(item => <RentalCard key={item.id} rental={item} />), loading: false }));
     }
-
-    fetchRealty = () => {
-        fetch("/api/realty/all/")
-            .then(response => response.json())
-            .then(data => {
-                this.setState({
-                    rentalArray: data.map(item => <RentalCard key={item.id} rental={item} />)
-                })
-            });
-    };
 
     render() {
         return (
             <div>
-                <Navbar />
                 <div className="container" style={{ marginTop: "10px" }}>
+                    {this.state.loading && <em>Loading realty...</em>}
+
                     <div className="row">{this.state.rentalArray}</div>
                 </div>
             </div>
