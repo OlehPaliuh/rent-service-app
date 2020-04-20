@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
 
-class RentalCard extends Component {
+class ApartmentCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -19,11 +19,11 @@ class RentalCard extends Component {
                     <h6 className="card-address">Address: {this.state.rental.address}</h6>
                     <p className="card-text">Description: {this.state.rental.description}</p>
                     <Link color="primary" class="btn btn-primary"
-                        to={`rental/${this.state.rental.id}`}>Show more</Link>
+                        to={`apartment/${this.state.rental.id}`}>Show more</Link>
                 </div>
             </div>
         )
     }
 }
 
-export default RentalCard;
+export default ApartmentCard;

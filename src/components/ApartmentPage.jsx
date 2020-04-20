@@ -1,21 +1,22 @@
 import React from "react"
 import "../index.css"
 
-class RentalPage extends React.Component {
+class ApartmentPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             id: this.props.match.params.id,
-            rentalItem: {}
+            rentalItem: {},
+
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.fetchRealtyById()
     }
 
     fetchRealtyById = () => {
-        fetch(`/api/realty/${this.state.id}`)
+        fetch(`/api/apartment/${this.state.id}`)
             .then(response => response.json())
             .then(data => {
                 this.setState({
@@ -35,4 +36,4 @@ class RentalPage extends React.Component {
     }
 }
 
-export default RentalPage;
+export default ApartmentPage;

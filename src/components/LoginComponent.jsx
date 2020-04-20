@@ -1,11 +1,12 @@
 import React, { Component } from "react"
+import { Link } from 'react-router-dom';
 import { userService } from '../services/userService';
+import { Form, Row, Col, FormGroup, Label, Input, NavLink } from 'reactstrap';
+import "../styles/LoginStyle.css"
 
 class LoginComponent extends Component {
     constructor(props) {
         super(props);
-
-        console.log(localStorage.getItem('user'))
 
         this.state = {
             username: '',
@@ -40,48 +41,59 @@ class LoginComponent extends Component {
             .then(
                 user => {
                     const { from } = this.props.location.state || { from: { pathname: "/" } };
-                    this.props.history.push(from);
+                    this.props.history.push(from)
+                    window.location.reload(false);
                 },
                 error => this.setState({ error, loading: false })
             );
     }
 
     render() {
-        const { username, password, submitted, loading, error } = this.state;
-        return (
-            <div className="container ownContainer">
-                <div className="col-md-6 col-md-offset-3">
-                    {/* <div className="alert alert-info">
-                    Username: test<br />
-                    Password: test
-                </div> */}
-                    <h2>Login</h2>
-                    <form name="form" onSubmit={this.handleSubmit}>
-                        <div className={'form-group' + (submitted && !username ? ' has-error' : '')}>
-                            <label htmlFor="username">Username</label>
-                            <input type="text" className="form-control" name="username" value={username} onChange={this.handleChange} />
-                            {submitted && !username &&
-                                <div className="help-block">Username is required</div>
-                            }
-                        </div>
-                        <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
-                            <label htmlFor="password">Password</label>
-                            <input type="password" className="form-control" name="password" value={password} onChange={this.handleChange} />
-                            {submitted && !password &&
-                                <div className="help-block">Password is required</div>
-                            }
-                        </div>
-                        <div className="form-group">
-                            <button className="btn btn-primary" disabled={loading}>Login</button>
-                            {loading &&
-                                <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                            }
-                        </div>
-                        {error &&
+        const { username, password, submitted, error } = this.state;
+        return(
+            <div className="backgroundClass">
+            <div className="login-container ">
+            <Form onSubmit={this.handleSubmit}>
+            <h3>Sign In</h3>
+
+            {error &&
                             <div className={'alert alert-danger'}>{error}</div>
                         }
-                    </form>
+
+            <FormGroup className="form-group">
+                <Label for="username">Username</Label>
+              <Input type="text" className="form-control" name="username" id="username" placeholder="username" value={username} onChange={this.handleChange} />
+              {submitted && !username &&
+                <div className="alert alert-warning help-block">Username is required</div>
+                }
+            </FormGroup>
+
+            <FormGroup className="form-group">
+                <Label for="password">Password</Label>
+              <Input type="password" className="form-control" name="password" id="password" placeholder="password" value={password} onChange={this.handleChange} />
+              {submitted && !password &&
+                <div className="alert alert-warning help-block">Password is required</div>
+                            }
+            </FormGroup>
+
+            <FormGroup className="form-group">
+                <div className="custom-control custom-checkbox">
+                    <input type="checkbox" className="custom-control-input" id="customCheck1" />
+                    <label className="custom-control-label" htmlFor="customCheck1">Remember me</label>
                 </div>
+            </FormGroup>
+
+            <button className="btn btn-primary btn-block">Submit</button>
+           <Row>
+           <Col md={6} className="forgot-password text-left" >
+                 <NavLink href="/register">Register</NavLink>
+            </Col>
+            <Col md={6} className="forgot-password text-right">
+                 <Link href="#" >Forgot password?</Link>
+            </Col>
+            </Row>
+        </Form>
+            </div>
             </div>
         );
     }

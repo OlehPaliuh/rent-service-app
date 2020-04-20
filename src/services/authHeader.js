@@ -2,6 +2,7 @@ import {userService} from "./userService"
 
 export const authHeader = {
     addAuthHeader,
+    handleAuthenticateResponse,
     handleResponse,
     getAccessToken
 };
@@ -11,11 +12,22 @@ function addAuthHeader() {
     let user = JSON.parse(localStorage.getItem('user'));
 
     if (user && user.accessToken) {
-        console.log("HEADER info " + user.accessToken);
         return { 'Authorization': 'Bearer ' + user.accessToken };
     } else {
         return {};
     }
+}
+
+function handleAuthenticateResponse(response) {
+    return response.text().then(text => {
+        const data = text && JSON.parse(text);
+        if (!response.ok) {
+            const error = (data && data.message) || response.statusText;
+            return Promise.reject(error);
+        }
+
+        return data;
+    });
 }
 
 function handleResponse(response) {
