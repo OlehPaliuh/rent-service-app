@@ -17,22 +17,23 @@ function getAllApatments() {
     };
 
     return fetch("/api/apartment/all", requestOptions)
-    .then(authHeader.handleResponse);
+    .then(authHeader.handleResponse)
+    .then(response => response.json(),
+        error => {console.error(error) 
+            return []});
 }
 
-function createApatment(apartment) {
+function createApatment(apartment, location) {
 
-    const {  name1, description, numberOfRooms, price, area, address, tags } = apartment
-
+    const {  title, description, numberOfRooms, price, area, tags } = apartment
+    
     const accountId =  JSON.parse(localStorage.getItem('user')).id;
-
-    console.log(accountId);
 
     const requestOptions = {
         method: 'POST',
         headers: authHeader.addAuthHeader(),
-        // headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({  name1, description, numberOfRooms, price, area, address, tags, accountId })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({  title, description, numberOfRooms, price, area, location, tags, accountId })
     };
 
     return fetch("/api/apartment/create", requestOptions)

@@ -54,14 +54,14 @@ class LoginComponent extends Component {
             <div className="backgroundClass">
             <div className="login-container ">
             <Form onSubmit={this.handleSubmit}>
-            <h3>Sign In</h3>
+            <h3 className="title">Sign In</h3>
 
             {error &&
                             <div className={'alert alert-danger'}>{error}</div>
                         }
 
             <FormGroup className="form-group">
-                <Label for="username">Username</Label>
+                <Label  className="labelFont" for="username">Username</Label>
               <Input type="text" className="form-control" name="username" id="username" placeholder="username" value={username} onChange={this.handleChange} />
               {submitted && !username &&
                 <div className="alert alert-warning help-block">Username is required</div>
@@ -69,7 +69,7 @@ class LoginComponent extends Component {
             </FormGroup>
 
             <FormGroup className="form-group">
-                <Label for="password">Password</Label>
+                <Label className="labelFont" for="password">Password</Label>
               <Input type="password" className="form-control" name="password" id="password" placeholder="password" value={password} onChange={this.handleChange} />
               {submitted && !password &&
                 <div className="alert alert-warning help-block">Password is required</div>
@@ -79,7 +79,7 @@ class LoginComponent extends Component {
             <FormGroup className="form-group">
                 <div className="custom-control custom-checkbox">
                     <input type="checkbox" className="custom-control-input" id="customCheck1" />
-                    <label className="custom-control-label" htmlFor="customCheck1">Remember me</label>
+                    <label className="custom-control-label labelFont" htmlFor="customCheck1">Remember me</label>
                 </div>
             </FormGroup>
 

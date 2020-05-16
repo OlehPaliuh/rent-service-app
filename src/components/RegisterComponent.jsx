@@ -77,7 +77,7 @@ class RegisterComponent extends Component {
             <Row >
               <Col md={6}>
                 <FormGroup>
-                  <Label for="firstName">First Name</Label>
+                  <Label className="labelFont" for="firstName">First Name</Label>
                   <Input type="text" 
                   name="firstName" 
                   id="user.firstName" 
@@ -91,7 +91,7 @@ class RegisterComponent extends Component {
               </Col>
               <Col md={6}>
                 <FormGroup>
-                  <Label for="lastName">Last Name</Label>
+                  <Label className="labelFont" for="lastName">Last Name</Label>
                   <Input
                     type="text"
                     name="lastName"
@@ -106,34 +106,34 @@ class RegisterComponent extends Component {
               </Col>
             </Row>
             <FormGroup>
-              <Label for="username">Username</Label>
+              <Label className="labelFont" for="username">Username</Label>
               <Input type="text" name="username" id="username" placeholder="username" value={user.username} onChange={this.handleChange} />
               {submitted && !user.username &&
                 <div className="alert alert-warning help-block">Username is required</div>
               }
             </FormGroup>
             <FormGroup>
-              <Label for="email">Email</Label>
+              <Label className="labelFont" for="email">Email</Label>
               <Input type="email" name="email" id="email" placeholder="username@gmail.com" value={user.email} onChange={this.handleChange} />
               {submitted && !user.email &&
                 <div className="alert alert-warning help-block">Email is required</div>
               }
             </FormGroup>
             <FormGroup>
-              <Label for="phoneNumber">Phone Number</Label>
+              <Label className="labelFont" for="phoneNumber">Phone Number</Label>
               <Input type="phone" name="phoneNumber" id="phoneNumber" placeholder="+380635475138" value={user.phoneNumber} onChange={this.handleChange} />
               {submitted && !user.phoneNumber &&
                 <div className="alert alert-warning help-block">Phone number is required</div>
               }
             </FormGroup>
             <FormGroup>
-              <Label for="password">Password</Label>
+              <Label className="labelFont" for="password">Password</Label>
               <Input type="password" name="password" id="password" placeholder="password" value={user.password} onChange={this.handleChange} />
               {submitted && !user.password &&
                 <div className="alert alert-warning help-block">Password is required</div>
               }
             </FormGroup>
-            <button className="btn btn-primary btn-block">Register</button>
+            <button className="btn btn-primary btn-block labelFont">Register</button>
             <p className="forgot-password text-right" >
               <NavLink href="/login">Already have an account? Sign in</NavLink>
             </p>

@@ -37,3 +37,11 @@ code {
   width: 50%;
   align-self: center;
 }
+
+.mapStyle {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  position: relative !important;
+  height: 400px !important;
+  width: 100% !important;
+}

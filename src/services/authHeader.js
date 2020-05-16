@@ -1,4 +1,4 @@
-import {userService} from "./userService"
+import { userService } from "./userService"
 
 export const authHeader = {
     addAuthHeader,
@@ -31,21 +31,19 @@ function handleAuthenticateResponse(response) {
 }
 
 function handleResponse(response) {
-    return response.text().then(text => {
-        const data = text && JSON.parse(text);
-        if (!response.ok) {
-            if (response.status === 401) {
-                const user = JSON.parse(localStorage.getItem('user'));
-                getAccessToken(user.refreshToken);
-            } else if(data.message === "REFRESH_TOKEN_NOT_VALID") {
-                userService.logout();
-            }
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
+    console.log(response);
+    if (!response.ok) {
+        if (response.status === 401) {
+            const user = JSON.parse(localStorage.getItem('user'));
+            getAccessToken(user.refreshToken);
+            // window.location.reload();
+        } else if (response.message === "REFRESH_TOKEN_NOT_VALID") {
+            userService.logout();
         }
-
-        return data;
-    });
+        const error = (response && response.message) || response.statusText;
+        return Promise.reject(error);
+    }
+    return response;
 }
 
 function getAccessToken(refreshToken) {
@@ -59,7 +57,7 @@ function getAccessToken(refreshToken) {
         .then(user => {
             if (user) {
                 localStorage.setItem('user', JSON.stringify(user));
-            } 
+            }
 
             return user;
         });
