@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
-import "../styles/ApartmentCard.css"
+import "../../styles/ApartmentCard.css"
 
 class ApartmentCard extends Component {
     constructor(props) {
@@ -14,6 +14,15 @@ class ApartmentCard extends Component {
     render() {
         const { imageLinks } = this.state.apartment || []; 
         
+        let roomString = null;
+
+        if (this.state.apartment.numberOfRooms > 1){
+            roomString = "rooms"
+        } else {
+            roomString = "room"
+        }
+
+
         return (
             <div className="card apartment-card">
                 {console.log(imageLinks[0])}
@@ -29,7 +38,11 @@ class ApartmentCard extends Component {
                             }
                         })
                     } */}
-                    <p className="card-text">Description: {this.state.apartment.description}</p>
+                    <p className="card-text">
+                        <span className="card-text-price">{this.state.apartment.price}$</span>
+                        <span className="card-text">   {this.state.apartment.numberOfRooms} {roomString}</span>
+                        <span className="card-text">   {this.state.apartment.area} м2</span>
+                    </p>
                     <Link exect color="primary" className="btn btn-primary"
                         to={`/apartment/${this.state.apartment.id}`}>Show more</Link>
                 </div>

@@ -8,6 +8,7 @@ export const userService = {
     logout,
     getAll,
     register,
+    getUserDetails,
     currentUser: currentUserSubject.asObservable(),
     get currentUserValue() { return currentUserSubject.value }
 };
@@ -66,6 +67,17 @@ function register(user) {
 
             return user;
         });
+}
+
+function getUserDetails(accountId) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader.addAuthHeader()
+    };
+
+    return fetch(`/api/user/account/${accountId}`, requestOptions)
+        .then(authHeader.handleResponse)
+        .then(response => response.json());
 }
 
 function getAll() {

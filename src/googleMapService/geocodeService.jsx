@@ -12,7 +12,7 @@ function getAutocompleteAdress(address) {
     };
 
     var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-        url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${API_KEY}&input=${address}&inputtype=textquery&components=country:ua&language=uk`
+        url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${API_KEY}&input=${address}&inputtype=textquery&components=country:ua&language=en`
 
     return fetch(proxyUrl + url, requestOptions)
         .then(response => response.json())
@@ -29,7 +29,7 @@ function getPlaceByPlaceId(place_id) {
     };
 
     var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
-        url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${API_KEY}`
+        url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${API_KEY}&language=en`
 
     return fetch(proxyUrl + url, requestOptions)
         .then(response => response.json())

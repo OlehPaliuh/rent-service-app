@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import ApartmentCard from './ApartmentCard'
+import ApartmentCard from './apartment/ApartmentCard'
 import { apartmentService } from '../services/apartmentService';
 import { Link } from 'react-router-dom';
 import { Col, Row } from 'reactstrap';
@@ -30,7 +30,7 @@ class HomeComponent extends Component {
         return (
             <div className="container ownContainer">
                 {localStorage.getItem('user') &&
-                    <Link exect className="btn btn-primary" to={`/apartment/create/`}>Create Appartment</Link>
+                    <Link exect className="btn btn-primary" to={`/apartment/create/`} > + ADD APARTMENT</Link>
                 }
 
                 <div className="container ownContainer">

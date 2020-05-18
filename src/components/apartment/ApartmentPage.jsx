@@ -1,15 +1,14 @@
 import React from "react"
-import "../index.css"
-import {
-    Col, Row, Table
-} from 'reactstrap';
-import MapContainer from '../googleMapService/MapContainer';
+import { Col, Row, Table, Toast, ToastBody, ToastHeader } from 'reactstrap';
+import MapContainer from '../../googleMapService/MapContainer';
+import ProfileCard from '../profile/ProfileCard';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
-import "../index.css"
-import "../styles/LoginStyle.css"
+import "../../index.css"
+import "../../styles/LoginStyle.css"
+import "../../styles/ApartmentPage.css"
 
 const Location = {
     administrativeArea: String,
@@ -36,7 +35,8 @@ class ApartmentPage extends React.Component {
             loading: false,
             photoIndex: 0,
             isOpen: false,
-            photoLoaded: false
+            photoLoaded: false,
+            loadedAccount: false
         }
 
     }
@@ -50,14 +50,16 @@ class ApartmentPage extends React.Component {
     }
 
     fetchRealtyById = async () => {
-        console.log(this.state.id)
+        this.setState({loadedAccount: false});
+
         await fetch(`/api/apartment/${this.state.id}`)
             .then(response => response.json())
             .then(data => {
                 this.setState({
                     apartmentItem: data,
                     loading: false,
-                    photoLoaded: true
+                    photoLoaded: true,
+                    loadedAccount: true
                 })
             });
     };
@@ -74,33 +76,54 @@ class ApartmentPage extends React.Component {
 
                 <Row>
                     <Col>
-                        <h3 className="title">{this.state.apartmentItem.name}</h3>
+                        <h3 className="title">{this.state.apartmentItem.title}</h3>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md={4}>
+                         { this.state.loadedAccount && <ProfileCard id={apartmentItem.accountId}/>
+                            }
+                    </Col>
+                    <Col md={8}>
+                        <Table bordered striped>
+                            <tbody>
+                                {(!this.state.loading && apartmentItem) &&
+                                    Object.keys(apartmentItem).map(function (key) {
+                                        if (key === "imageLinks" || key === "id"
+                                            || key === "title" || key === "accountId") {
+                                            console.log("imageLinks")
+                                        } else if (key !== 'location') {
+                                            return (
+                                                <tr key={key}>
+                                                    <th scope="row">{key}</th>
+                                                    <td>{apartmentItem[key]}</td>
+                                                </tr>)
+                                        } else {
+                                            return (
+                                                <tr key={key}>
+                                                    <th scope="row">{key}</th>
+                                                    <td>{apartmentItem[key].fullAddress}</td>
+                                                </tr>)
+                                        }
+                                    })
+                                }
+                            </tbody>
+                        </Table>
                     </Col>
                 </Row>
 
-                <Table bordered striped>
-                    <tbody>
-                        {(!this.state.loading && apartmentItem) &&
-                            Object.keys(apartmentItem).map(function (key) {
-                                if (key === "imageLinks") {
-                                    console.log("imageLinks")
-                                } else if (key !== 'location') {
-                                    return (
-                                        <tr key={key}>
-                                            <th scope="row">{key}</th>
-                                            <td>{apartmentItem[key]}</td>
-                                        </tr>)
-                                } else {
-                                    return (
-                                        <tr key={key}>
-                                            <th scope="row">{key}</th>
-                                            <td>{apartmentItem[key].fullAddress}</td>
-                                        </tr>)
-                                }
-                            })
-                        }
-                    </tbody>
-                </Table>
+                {/* <Row>
+                    <Col>
+                        <Toast className="description-box">
+                            <ToastHeader>
+                                Description
+                            </ToastHeader>
+                            <ToastBody>
+                                {this.state.apartmentItem.description}
+                             </ToastBody>
+                        </Toast>
+                    </Col>
+                </Row> */}
 
                 <MapContainer
                     onClick={this.ckick}
@@ -108,11 +131,7 @@ class ApartmentPage extends React.Component {
                     center={{ lat: apartmentItem.location.latitude, lng: apartmentItem.location.longitude }}
                 />
 
-
-                <button type="button" onClick={() => this.setState({ isOpen: true })}>
-                    Open Lightbox
-                </button>
-
+                <h4 className="title">Photos</h4>
 
                 {this.state.photoLoaded &&
 
@@ -122,7 +141,9 @@ class ApartmentPage extends React.Component {
                         totalSlides={apartmentItem.imageLinks.length}
                         className="sliderContainer"
                     >
-                        <Slider>
+                        <Slider
+                            onClick={() => this.setState({ isOpen: true })}
+                        >
                             {apartmentItem.imageLinks.map(slide =>
                                 <Slide key={slide}
                                     index={slide}
@@ -130,8 +151,8 @@ class ApartmentPage extends React.Component {
                                     <img src={slide} className="item" alt={slide} />
                                 </Slide>)}
                         </Slider>
-                        <ButtonBack className="prev-button">Back</ButtonBack>
-                        <ButtonNext className="next-button">Next</ButtonNext>
+                        <ButtonBack className="prev-button btn btn-primary">Back</ButtonBack>
+                        <ButtonNext className="next-button btn btn-primary">Next</ButtonNext>
                     </CarouselProvider>
                 }
 

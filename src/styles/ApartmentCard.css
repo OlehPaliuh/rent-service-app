@@ -3,6 +3,8 @@
     margin: auto;
     max-width: 230px;
     max-height: 200px;
+    min-width: 100px;
+    min-height: 200px;
 }
 
 .apartment-card{
@@ -13,4 +15,8 @@
 .apartment-card2{
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.card-title {
+    margin: auto;
 }

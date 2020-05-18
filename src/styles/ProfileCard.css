@@ -1,0 +1,25 @@
+.profile-card-image{
+    padding-top: 10px;
+    margin: auto;
+    max-width: 1500px;
+    max-height: 150px;
+    min-width: 100px;
+    min-height: 150px;
+    border-radius: 50%;
+}
+
+.profile-card{
+    min-height: 290px;
+    max-height: 290px;
+    margin-bottom: 15px;
+    background-color: #F9F9FB !important;
+}
+
+.profile-card2{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.profile-card-title {
+    text-align: center;
+}

@@ -1,0 +1,26 @@
+.prev-button {
+    float: left;
+    min-width: 100px;
+    }
+    
+.next-button {
+    float: right;
+    min-width: 100px;
+    }
+
+.title{
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.card-text-price{
+    color: green;
+}
+
+.description-box {
+    align-content: center;
+    width: 100%;
+    padding-left: 10px;
+    max-width: 100% !important;
+}

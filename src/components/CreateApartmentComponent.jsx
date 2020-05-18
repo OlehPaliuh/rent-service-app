@@ -47,8 +47,6 @@ class CreateApatmentComponent extends React.Component {
     handleChange = e => {
         const { name, value } = e.target;
 
-        console.log("Before update");
-        console.log(this.state.apartment);
         const apartmentObj = this.state.apartment;
 
         for (let [keyObj] of Object.entries(apartmentObj)) {
@@ -60,9 +58,6 @@ class CreateApatmentComponent extends React.Component {
         this.setState({
             apartment: apartmentObj
         });
-
-        console.log(this.state.apartment);
-        console.log("After update");
     }
 
     updateLocationObj = (name, value) => {
@@ -134,19 +129,8 @@ class CreateApatmentComponent extends React.Component {
     handleSubmit = e => {
         e.preventDefault();
 
-        console.log("Begin submit create apartment")
-
         this.setState({ submitted: true });
         const { apartment, apartmentLocation, fileLinks } = this.state;
-
-        console.log(this.state.apartment);
-
-        console.log(apartment.title);
-        console.log(apartment.description);
-        console.log(apartment.price);
-        console.log(apartment.area);
-        console.log(apartment.numberOfRooms);
-        console.log(apartmentLocation.fullAddress);
 
         // stop here if form is invalid
         if (!(apartment.title && apartment.description && apartment.price
@@ -154,8 +138,6 @@ class CreateApatmentComponent extends React.Component {
             // this.setState({ error: "Form is not filled", loading: false })
             return;
         }
-
-        console.log("After checking fields")
 
         this.setState({ loading: true });
 
@@ -170,7 +152,6 @@ class CreateApatmentComponent extends React.Component {
     }
 
     handleImageUpload = () => {
-        // awsPhotoUplocadService.uploadFileToS3(this.state.files[0]);
         imageService.uploadImage(this.state.files);
     }
 

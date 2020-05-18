@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #F9F9FB !important;
 }
 
 code {
@@ -78,15 +79,12 @@ code {
   padding: 3px;
 }
 
-.prev-button {
-float: left;
-}
-
-.next-button {
-float: right;
-}
-
 .apartment-card {
   width: 100%;
   margin: 20px;
+}
+
+.addApartmentButton {
+  background-color: #79be00 !important;
+  color: white !important;
 }
