@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListGroup, ListGroupItem } from 'reactstrap';
+import { ListGroupItem } from 'reactstrap';
 
 class SuggestionListComponent extends React.Component {
     constructor(props) {

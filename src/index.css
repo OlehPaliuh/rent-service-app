@@ -18,6 +18,7 @@ code {
 
 .ownContainer {
   margin-top: 30px;
+  margin-left: initial;
 }
 
 .title {
@@ -44,4 +45,48 @@ code {
   position: relative !important;
   height: 400px !important;
   width: 100% !important;
+}
+
+.dropzone {
+  text-align: center;
+  padding: 20px;
+  border: 3px dashed #eeeeee;
+  background-color: #fafafa;
+  color: #bdbdbd;
+}
+
+.sliderContainer {
+  /* align-content: center !important; */
+  margin: auto;
+  /* width: 50%; */
+  width: 400px;
+  /* max-height: 400px; */
+  margin: 3px;
+  padding: 3px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  margin-bottom: 50px;
+}
+
+.item {
+  width: inherit ;
+  height: inherit ;
+  /* max-height: 400px; */
+  margin: 3px;
+  padding: 3px;
+}
+
+.prev-button {
+float: left;
+}
+
+.next-button {
+float: right;
+}
+
+.apartment-card {
+  width: 100%;
+  margin: 20px;
 }

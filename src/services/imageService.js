@@ -1,20 +1,26 @@
-// import { authHeader } from './authHeader';
+import { authHeader } from './authHeader';
 
-// export const imageService = {
-//     uploadImage
-// };
+export const imageService = {
+    uploadImage
+};
 
-// function uploadImage(file) {
-//     const formData = new FormData();
-//     formData.append('file', file);
+function uploadImage(files) {
 
-//     const requestOptions = {
-//         method: 'POST',
-//         headers: authHeader.addAuthHeader(),
-//         body: formData
-//     };
+    const formData = new FormData();
+    for (var x = 0; x < files.length; x++) {
+        formData.append("files", files[x]);
+    }
 
-//     return fetch("/api/image/save", requestOptions)
-//     .then(authHeader.handleResponse);
-// }
+    const accountId = JSON.parse(localStorage.getItem('user')).id;
+
+    const requestOptions = {
+        method: 'POST',
+        headers: authHeader.addAuthHeader(),
+        body: formData
+    };
+
+    return fetch(`/api/image/${accountId}/save`, requestOptions)
+    .then(authHeader.handleResponse)
+    .then(response => response.json());
+}
 

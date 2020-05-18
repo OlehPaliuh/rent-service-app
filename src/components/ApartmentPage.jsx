@@ -1,7 +1,15 @@
 import React from "react"
 import "../index.css"
-import { Col, Row, Table } from "reactstrap";
+import {
+    Col, Row, Table
+} from 'reactstrap';
 import MapContainer from '../googleMapService/MapContainer';
+import Lightbox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css';
+import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
+import 'pure-react-carousel/dist/react-carousel.es.css';
+import "../index.css"
+import "../styles/LoginStyle.css"
 
 const Location = {
     administrativeArea: String,
@@ -25,7 +33,10 @@ class ApartmentPage extends React.Component {
             apartmentItem: {
                 location: Location
             },
-            loading: false
+            loading: false,
+            photoIndex: 0,
+            isOpen: false,
+            photoLoaded: false
         }
 
     }
@@ -38,25 +49,25 @@ class ApartmentPage extends React.Component {
         console.log("click");
     }
 
-    fetchRealtyById = () => {
+    fetchRealtyById = async () => {
         console.log(this.state.id)
-        fetch(`/api/apartment/${this.state.id}`)
+        await fetch(`/api/apartment/${this.state.id}`)
             .then(response => response.json())
             .then(data => {
                 this.setState({
                     apartmentItem: data,
-                    loading: false
+                    loading: false,
+                    photoLoaded: true
                 })
             });
     };
 
     render() {
-        
+
         if (this.state.loading) {
             return <em>Loading apatment...</em>
         }
-
-        const { apartmentItem } = this.state
+        const { photoIndex, isOpen, apartmentItem } = this.state;
 
         return (
             <div className="container ownContainer">
@@ -71,7 +82,9 @@ class ApartmentPage extends React.Component {
                     <tbody>
                         {(!this.state.loading && apartmentItem) &&
                             Object.keys(apartmentItem).map(function (key) {
-                                if (key !== 'location') {
+                                if (key === "imageLinks") {
+                                    console.log("imageLinks")
+                                } else if (key !== 'location') {
                                     return (
                                         <tr key={key}>
                                             <th scope="row">{key}</th>
@@ -88,8 +101,59 @@ class ApartmentPage extends React.Component {
                         }
                     </tbody>
                 </Table>
-                {console.log(apartmentItem.location)}
-                <MapContainer onClick={this.ckick} location={apartmentItem.location} />
+
+                <MapContainer
+                    onClick={this.ckick}
+                    location={apartmentItem.location}
+                    center={{ lat: apartmentItem.location.latitude, lng: apartmentItem.location.longitude }}
+                />
+
+
+                <button type="button" onClick={() => this.setState({ isOpen: true })}>
+                    Open Lightbox
+                </button>
+
+
+                {this.state.photoLoaded &&
+
+                    <CarouselProvider
+                        naturalSlideWidth={60}
+                        naturalSlideHeight={60}
+                        totalSlides={apartmentItem.imageLinks.length}
+                        className="sliderContainer"
+                    >
+                        <Slider>
+                            {apartmentItem.imageLinks.map(slide =>
+                                <Slide key={slide}
+                                    index={slide}
+                                >
+                                    <img src={slide} className="item" alt={slide} />
+                                </Slide>)}
+                        </Slider>
+                        <ButtonBack className="prev-button">Back</ButtonBack>
+                        <ButtonNext className="next-button">Next</ButtonNext>
+                    </CarouselProvider>
+                }
+
+                {isOpen && (
+                    <Lightbox
+                        mainSrc={apartmentItem.imageLinks[photoIndex]}
+                        nextSrc={apartmentItem.imageLinks[(photoIndex + 1) % apartmentItem.imageLinks.length]}
+                        prevSrc={apartmentItem.imageLinks[(photoIndex + apartmentItem.imageLinks.length - 1) % apartmentItem.imageLinks.length]}
+                        onCloseRequest={() => this.setState({ isOpen: false })}
+                        onMovePrevRequest={() =>
+                            this.setState({
+                                photoIndex: (photoIndex + apartmentItem.imageLinks.length - 1) % apartmentItem.imageLinks.length,
+                            })
+                        }
+                        onMoveNextRequest={() =>
+                            this.setState({
+                                photoIndex: (photoIndex + 1) % apartmentItem.imageLinks.length,
+                            })
+                        }
+                    />
+                )}
+
             </div>
         )
     }

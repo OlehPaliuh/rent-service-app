@@ -23,7 +23,7 @@ function getAllApatments() {
             return []});
 }
 
-function createApatment(apartment, location) {
+function createApatment(apartment, location, imageLinks) {
 
     const {  title, description, numberOfRooms, price, area, tags } = apartment
     
@@ -33,9 +33,10 @@ function createApatment(apartment, location) {
         method: 'POST',
         headers: authHeader.addAuthHeader(),
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({  title, description, numberOfRooms, price, area, location, tags, accountId })
+        body: JSON.stringify({  title, description, numberOfRooms, price, area, location, tags, accountId, imageLinks})
     };
 
     return fetch("/api/apartment/create", requestOptions)
-    .then(authHeader.handleResponse);
+    .then(authHeader.handleResponse)
+    .then(response => response.json());
 }

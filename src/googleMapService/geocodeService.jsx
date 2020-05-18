@@ -18,7 +18,7 @@ function getAutocompleteAdress(address) {
         .then(response => response.json())
         .then(data => data.predictions)
         .catch(() => {
-            console.log("Can’t access!" + " response. Blocked by browser?")
+            console.log("Can’t access! Blocked by browser?")
             return []
         });
 }
@@ -34,7 +34,7 @@ function getPlaceByPlaceId(place_id) {
     return fetch(proxyUrl + url, requestOptions)
         .then(response => response.json())
         .catch(() => {
-            console.log("Can’t access!" + " response. Blocked by browser?")
+            console.log("Can’t access! Blocked by browser?")
             return []
         });
 }

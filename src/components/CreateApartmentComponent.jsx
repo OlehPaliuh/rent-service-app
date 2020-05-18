@@ -2,11 +2,13 @@ import React from "react"
 import { Col, Row, Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import { apartmentService } from '../services/apartmentService';
 import { geocodeService } from '../googleMapService/geocodeService';
+import { imageService } from '../services/imageService';
 import { Link } from 'react-router-dom';
 import MapContainer from '../googleMapService/MapContainer';
 import SuggestionListComponent from '../googleMapService/SuggestionListComponent';
 import Geocode from "react-geocode";
 import { ListGroup } from 'reactstrap';
+import Dropzone from 'react-dropzone'
 import "../index.css"
 import "../styles/LoginStyle.css"
 import "../styles/CreateApartment.css"
@@ -31,16 +33,22 @@ class CreateApatmentComponent extends React.Component {
                 fullAddress: '',
             },
             suggestions: [],
-            addressForLooking: '',
+            files: [],
+            fileLinks: [],
+            filesLoaded: false,
             submitted: false,
             loading: false,
-            error: ''
+            error: '',
+            photoError: false, 
+            photoErrorMessage: ""
         }
     }
 
     handleChange = e => {
         const { name, value } = e.target;
 
+        console.log("Before update");
+        console.log(this.state.apartment);
         const apartmentObj = this.state.apartment;
 
         for (let [keyObj] of Object.entries(apartmentObj)) {
@@ -52,6 +60,9 @@ class CreateApatmentComponent extends React.Component {
         this.setState({
             apartment: apartmentObj
         });
+
+        console.log(this.state.apartment);
+        console.log("After update");
     }
 
     updateLocationObj = (name, value) => {
@@ -65,7 +76,7 @@ class CreateApatmentComponent extends React.Component {
         }
 
         this.setState({
-            apartment: apartmentLocationObj
+            apartmentLocation: apartmentLocationObj
         });
     }
 
@@ -123,8 +134,19 @@ class CreateApatmentComponent extends React.Component {
     handleSubmit = e => {
         e.preventDefault();
 
+        console.log("Begin submit create apartment")
+
         this.setState({ submitted: true });
-        const { apartment, apartmentLocation } = this.state;
+        const { apartment, apartmentLocation, fileLinks } = this.state;
+
+        console.log(this.state.apartment);
+
+        console.log(apartment.title);
+        console.log(apartment.description);
+        console.log(apartment.price);
+        console.log(apartment.area);
+        console.log(apartment.numberOfRooms);
+        console.log(apartmentLocation.fullAddress);
 
         // stop here if form is invalid
         if (!(apartment.title && apartment.description && apartment.price
@@ -133,9 +155,11 @@ class CreateApatmentComponent extends React.Component {
             return;
         }
 
+        console.log("After checking fields")
+
         this.setState({ loading: true });
 
-        apartmentService.createApatment(apartment, apartmentLocation)
+        apartmentService.createApatment(apartment, apartmentLocation, fileLinks)
             .then(
                 apartment => {
                     const { from } = this.props.location.state || { from: { pathname: `../../apartment/${apartment.id}` } };
@@ -145,8 +169,39 @@ class CreateApatmentComponent extends React.Component {
             );
     }
 
+    handleImageUpload = () => {
+        // awsPhotoUplocadService.uploadFileToS3(this.state.files[0]);
+        imageService.uploadImage(this.state.files);
+    }
+
+    handleChangeStatus = ({ meta }, status) => {
+        console.log(status, meta)
+    }
+
+    handleDrop = (filesToSate) => {
+
+        this.setState({photoError: false, photoErrorMessage: ""})
+
+        const { files } = this.state;
+        const { fileLinks } = this.state;
+
+        console.log(files.length);
+        if ((files.length + filesToSate.length) < 8) {
+            filesToSate.map(file => files.push(file));
+            this.setState({files: files});
+
+            imageService.uploadImage(filesToSate)
+                .then(data => {
+                    data.map(link => fileLinks.push(link))
+                    this.setState({fileLinks: fileLinks});
+                });
+        } else {
+            this.setState({photoError: true, photoErrorMessage: "You can load only 7 photos, size less 3 MB"});
+            return ;
+        }
+    }
+
     handleAutocompleteClick = suggestion => {
-        console.log(suggestion.place_id);
         this.setState({ suggestions: [] });
         geocodeService.getPlaceByPlaceId(suggestion.place_id)
             .then(response => {
@@ -177,9 +232,21 @@ class CreateApatmentComponent extends React.Component {
             return options;
         }
 
-        const { apartment, apartmentLocation, error, submitted } = this.state;
+        const {photoError, photoErrorMessage} = this.state;
 
-        const { suggestions, addressForLooking } = this.state;
+        const thumbs = this.state.fileLinks.map(link => (
+            <div className="thumb" key={link}>
+                <div className="thumbInner">
+                    <img
+                        alt="Loaded"
+                        src={link}
+                        className="img"
+                    />
+                </div>
+            </div>
+        ))
+
+        const { apartment, apartmentLocation, error, submitted } = this.state;
 
         return (
             <div className=" create-apartment-container ownContainer">
@@ -286,6 +353,36 @@ class CreateApatmentComponent extends React.Component {
                         />
                         {submitted && !apartmentLocation.fullAddress &&
                             <div className="alert alert-warning help-block">Address is required</div>
+                        }
+                    </FormGroup>
+                    <FormGroup>
+                        <Label className="labelFont" for="photos">Photos</Label>
+                        <Dropzone
+                            onChangeStatus={this.handleChangeStatus}
+                            onDrop={this.handleDrop}
+                            maxFiles={7}
+                            inputContent="Drop 7 Files"
+                            inputWithFilesContent={files => `${7 - files.length} more`}
+                            submitButtonDisabled={files => files.length < 7}
+                        >
+                            {({ getRootProps, getInputProps }) => (
+                                <div {...getRootProps({ className: "dropzone" })}>
+                                    <input {...getInputProps()} />
+                                    <p>Drag'n'drop files, or click to select files</p>
+                                </div>
+                            )}
+                        </Dropzone>
+                            <Input type="file"  
+                            name="photos"
+                            id="photos"
+                            hidden
+                            />
+                        <aside className="thumbsContainer">
+                            {thumbs}
+                        </aside>
+
+                        {photoError &&
+                            <div className={'alert alert-danger'}>{photoErrorMessage}</div>
                         }
                     </FormGroup>
                     <FormGroup>

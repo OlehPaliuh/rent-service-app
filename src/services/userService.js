@@ -19,6 +19,8 @@ function login(username, password) {
         body: JSON.stringify({ username, password })
     };
 
+    console.log("Before login ")
+
     return fetch("/api/authenticate", requestOptions)
         .then(authHeader.handleAuthenticateResponse)
         .then(user => {
@@ -26,8 +28,11 @@ function login(username, password) {
             if (user) {
                 // store user details and basic auth credentials in local storage 
                 // to keep user logged in between page refreshes
+                console.log("logining user info ")
                 console.log(user);
                 localStorage.setItem('user', JSON.stringify(user));
+                console.log("Saved user:")
+                console.log(JSON.parse(localStorage.getItem('user')))
             }
 
             return user;

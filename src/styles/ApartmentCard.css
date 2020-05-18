@@ -1,0 +1,16 @@
+.card-image{
+    padding-top: 10px;
+    margin: auto;
+    max-width: 230px;
+    max-height: 200px;
+}
+
+.apartment-card{
+    min-height: 350px;
+    max-height: 350px;
+}
+
+.apartment-card2{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

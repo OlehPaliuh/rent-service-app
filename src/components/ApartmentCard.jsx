@@ -1,19 +1,23 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
+import "../styles/ApartmentCard.css"
 
 class ApartmentCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            apartment: this.props.apartment,
+            apartment: this.props.apartment || {},
             match: this.props.match
         }
     }
 
     render() {
+        const { imageLinks } = this.state.apartment || []; 
+        
         return (
-            <div className="card" style={{ width: "25%", margin: "20px" }}>
-                {/* <img className="card-img-top" alt="Card image cap" /> */}
+            <div className="card apartment-card">
+                {console.log(imageLinks[0])}
+                <img className="card-img-top card-image" alt="Card image cap" src={imageLinks[0]} />
                 <div className="card-body">
                     <h5 className="card-title">{this.state.apartment.title}</h5>
                     {/* { this.state.apartment.loctaion &&
