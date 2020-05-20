@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import { Link } from 'react-router-dom';
 import { Navbar, Button, NavbarBrand, NavLink, FormGroup, Form } from 'reactstrap'
 import { userService } from "../services/userService";
 import "../index.css"
@@ -64,6 +65,9 @@ class NavbarComponent extends Component {
                             <NavLink href="/about/">About</NavLink>
                         </li>
                     </ul>
+                    <Link to={`/profile`} >
+                        <img src="/images/profile_navBar_icon.png" className="nav-bar-profile-icon" />
+                    </Link>
                     {!this.state.isSearchPageOpened &&
                         <Form className="form-inline my-2 my-lg-1" onSubmit={this.handleSearch}>
                             <input className="form-control mr-sm-2"

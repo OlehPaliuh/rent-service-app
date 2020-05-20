@@ -9,8 +9,8 @@
 }
 
 .profile-card{
-    min-height: 290px;
-    max-height: 290px;
+    min-height: 310px;
+    max-height: 310px;
     margin-bottom: 15px;
     background-color: #F9F9FB !important;
 }
@@ -22,4 +22,10 @@
 
 .profile-card-title {
     text-align: center;
+}
+
+.request-ovwerview-btn {
+    align-self: center !important;
+    margin-left: 25%;
+    width: 50%;
 }

@@ -13,7 +13,9 @@ export const apartmentService = {
 function getAllApatments() {
     const requestOptions = {
         method: 'GET',
-        headers: authHeader.addAuthHeader()
+        headers: {
+            'Authorization': authHeader.addAuthHeader()
+        }
     };
 
     return fetch("/api/apartment/all", requestOptions)
@@ -31,8 +33,10 @@ function createApatment(apartment, location, imageLinks) {
 
     const requestOptions = {
         method: 'POST',
-        headers: authHeader.addAuthHeader(),
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Authorization': authHeader.addAuthHeader(),
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({  title, description, numberOfRooms, price, area, location, tags, accountId, imageLinks})
     };
 

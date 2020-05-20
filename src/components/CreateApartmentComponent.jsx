@@ -89,7 +89,7 @@ class CreateApatmentComponent extends React.Component {
 
     handleMapChange = location => {
         Geocode.setApiKey(API_KEY);
-        Geocode.setLanguage("uk");
+        Geocode.setLanguage("en");
         Geocode.setRegion("ua");
         Geocode.enableDebug();
         Geocode.fromLatLng(location.lat(), location.lng()).then(
@@ -135,7 +135,13 @@ class CreateApatmentComponent extends React.Component {
         // stop here if form is invalid
         if (!(apartment.title && apartment.description && apartment.price
             && apartment.area && apartment.numberOfRooms && apartmentLocation.fullAddress)) {
-            // this.setState({ error: "Form is not filled", loading: false })
+            this.setState({ error: "Form is not filled", loading: false })
+            return;
+        }
+
+        if(apartment.price < 1 || apartment.area < 1 || apartment.numberOfRooms < 1 
+            || apartment.price > 1000000 || apartment.area > 1000000 || apartment.numberOfRooms > 1000000) {
+            this.setState({ error: "Fields should be positive and less than 1 000 000", loading: false })
             return;
         }
 

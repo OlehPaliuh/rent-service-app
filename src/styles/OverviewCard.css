@@ -1,0 +1,15 @@
+.reject-button{
+    float: right;
+    margin-right: 15px;
+    min-width: 40px;
+}
+
+.agreed-button{
+    float: left;
+    margin-left: 5px;
+    min-width: 40px;
+}
+
+.overview-card {
+    margin-bottom: 10px;
+}

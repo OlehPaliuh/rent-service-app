@@ -1,14 +1,18 @@
 import React from "react"
-import { Col, Row, Table, Toast, ToastBody, ToastHeader } from 'reactstrap';
+import { Col, Row, Table, Button } from 'reactstrap';
 import MapContainer from '../../googleMapService/MapContainer';
+import ModalComponent from '../modal/ModalComponent';
 import ProfileCard from '../profile/ProfileCard';
 import Lightbox from 'react-image-lightbox';
+import { apartmentService } from "../../services/apartmentService";
+import { overviewService } from "../../services/overviewService";
 import 'react-image-lightbox/style.css';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import "../../index.css"
 import "../../styles/LoginStyle.css"
 import "../../styles/ApartmentPage.css"
+import OverviewCard from "../overview/OverviewCard";
 
 const Location = {
     administrativeArea: String,
@@ -36,13 +40,17 @@ class ApartmentPage extends React.Component {
             photoIndex: 0,
             isOpen: false,
             photoLoaded: false,
-            loadedAccount: false
+            loadedAccount: false,
+            modalOpen: false,
+            isApartmentOwner: false,
+            loadedOverviews: false,
+            overviewRequests: []
         }
-
     }
 
     componentDidMount() {
         this.fetchRealtyById()
+        this.fetchApartmentOverviewRequests()
     }
 
     ckick = () => {
@@ -51,6 +59,8 @@ class ApartmentPage extends React.Component {
 
     fetchRealtyById = async () => {
         this.setState({loadedAccount: false});
+
+        const currentUserId =  JSON.parse(localStorage.getItem('user')).id;
 
         await fetch(`/api/apartment/${this.state.id}`)
             .then(response => response.json())
@@ -61,15 +71,36 @@ class ApartmentPage extends React.Component {
                     photoLoaded: true,
                     loadedAccount: true
                 })
+                if (data.accountId === currentUserId) {
+                    this.setState({ isApartmentOwner: true})
+                }
             });
     };
+
+    fetchApartmentOverviewRequests = () => {
+        this.setState({ loadedOverviews: false });
+        overviewService.getApartmentOverviewRequests(this.state.id)
+            .then(result => {
+                this.setState({ overviewRequests: result, loadedOverviews: true });
+            },
+                error => this.setState({ error, loadedOverviews: true })
+            );
+    }
+
+    handleCancel = () => {
+        this.setState({ modalOpen: false });
+    }
+
+    handleRequestOverview = () => {
+        this.setState({ modalOpen: true });
+    }
 
     render() {
 
         if (this.state.loading) {
             return <em>Loading apatment...</em>
         }
-        const { photoIndex, isOpen, apartmentItem } = this.state;
+        const { photoIndex, isOpen, apartmentItem, isApartmentOwner } = this.state;
 
         return (
             <div className="container ownContainer">
@@ -81,7 +112,10 @@ class ApartmentPage extends React.Component {
                 </Row>
                 <Row>
                     <Col md={4}>
-                         { this.state.loadedAccount && <ProfileCard id={apartmentItem.accountId}/>
+                         { this.state.loadedAccount && <ProfileCard 
+                                            id={apartmentItem.accountId} 
+                                            isApartmentOwner={isApartmentOwner}
+                                            requestReview={this.handleRequestOverview}/>
                             }
                     </Col>
                     <Col md={8}>
@@ -112,18 +146,11 @@ class ApartmentPage extends React.Component {
                     </Col>
                 </Row>
 
-                {/* <Row>
-                    <Col>
-                        <Toast className="description-box">
-                            <ToastHeader>
-                                Description
-                            </ToastHeader>
-                            <ToastBody>
-                                {this.state.apartmentItem.description}
-                             </ToastBody>
-                        </Toast>
-                    </Col>
-                </Row> */}
+                <ModalComponent 
+                accountId={this.state.apartmentItem.accountId} 
+                apartmentId={this.state.apartmentItem.id} 
+                modal={this.state.modalOpen}
+                onCancel={this.handleCancel}/>
 
                 <MapContainer
                     onClick={this.ckick}
@@ -131,6 +158,10 @@ class ApartmentPage extends React.Component {
                     center={{ lat: apartmentItem.location.latitude, lng: apartmentItem.location.longitude }}
                 />
 
+
+                
+                <Row>
+                    <Col lg={5} ms={6}>
                 <h4 className="title">Photos</h4>
 
                 {this.state.photoLoaded &&
@@ -155,6 +186,17 @@ class ApartmentPage extends React.Component {
                         <ButtonNext className="next-button btn btn-primary">Next</ButtonNext>
                     </CarouselProvider>
                 }
+                    </Col>
+
+                {this.state.isApartmentOwner && this.state.loadedOverviews && this.state.overviewRequests.length > 0 &&
+                    <Col lg={6} ms={6}>
+                       <h4 className="title">Active overview requests</h4>
+                        <Row>
+                        {this.state.overviewRequests.map(overview => <Col ms={3}><OverviewCard overview={overview} /></Col>)}
+                        </Row>
+                    </Col>
+            }
+                </Row>
 
                 {isOpen && (
                     <Lightbox

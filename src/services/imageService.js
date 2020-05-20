@@ -15,7 +15,9 @@ function uploadImage(files) {
 
     const requestOptions = {
         method: 'POST',
-        headers: authHeader.addAuthHeader(),
+        headers: {
+            'Authorization': authHeader.addAuthHeader(),
+        },
         body: formData
     };
 

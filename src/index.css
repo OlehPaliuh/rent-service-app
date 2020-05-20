@@ -88,3 +88,9 @@ code {
   background-color: #79be00 !important;
   color: white !important;
 }
+
+.nav-bar-profile-icon {
+  max-width: 40px;
+  max-height: 40px;
+  margin-right: 15px;
+}

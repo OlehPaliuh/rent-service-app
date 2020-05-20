@@ -9,6 +9,7 @@ export const userService = {
     getAll,
     register,
     getUserDetails,
+    getOwnerAccountDetails,
     currentUser: currentUserSubject.asObservable(),
     get currentUserValue() { return currentUserSubject.value }
 };
@@ -29,11 +30,7 @@ function login(username, password) {
             if (user) {
                 // store user details and basic auth credentials in local storage 
                 // to keep user logged in between page refreshes
-                console.log("logining user info ")
-                console.log(user);
                 localStorage.setItem('user', JSON.stringify(user));
-                console.log("Saved user:")
-                console.log(JSON.parse(localStorage.getItem('user')))
             }
 
             return user;
@@ -72,7 +69,9 @@ function register(user) {
 function getUserDetails(accountId) {
     const requestOptions = {
         method: 'GET',
-        headers: authHeader.addAuthHeader()
+        headers: {
+            'Authorization': authHeader.addAuthHeader(),
+        }
     };
 
     return fetch(`/api/user/account/${accountId}`, requestOptions)
@@ -80,10 +79,25 @@ function getUserDetails(accountId) {
         .then(response => response.json());
 }
 
+function getOwnerAccountDetails(accountId) {
+    const requestOptions = {
+        method: 'GET',
+        headers: {
+            'Authorization': authHeader.addAuthHeader(),
+        }
+    };
+
+    return fetch(`/api/user/account/owner/${accountId}`, requestOptions)
+        .then(authHeader.handleResponse)
+        .then(response => response.json());
+}
+
 function getAll() {
     const requestOptions = {
         method: 'GET',
-        headers: authHeader.addAuthHeader()
+        headers: {
+            'Authorization': authHeader.addAuthHeader(),
+        }
     };
 
     return fetch("/api/admin/all_users", requestOptions)

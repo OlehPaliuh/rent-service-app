@@ -1,0 +1,47 @@
+.title{
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    width: 100% !important;
+}
+
+.name-title {
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.profile-image{
+    min-width: 350px;
+    min-height: 350px;
+    max-width: 350px;
+    max-height: 350px;
+    border-radius: 50%;
+    border-radius: 50% !important;
+}
+
+.profile-container {
+    margin-right: 500px;
+    margin-left: 50px;
+    padding-left: 100px;
+}
+
+.nickname{
+    text-align: center;
+    font: italic;
+}
+
+.edit-button{
+    /* float: right; */
+    margin-top: 20px;
+    min-width: 125px;
+}
+
+.info-text {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.own-apartment-list {
+    max-height: 300px;
+}

@@ -9,9 +9,9 @@ import { Route, Switch } from 'react-router-dom';
 import { userService } from './services/userService';
 import NavbarComponent from './components/NavbarComponent';
 import RegisterComponent from './components/RegisterComponent';
-import ProfileComponent from './components/ProfileComponent';
 import CreateApatmentComponent from './components/CreateApartmentComponent';
 import SearchResultComponent from './components/SearchResultComponent';
+import ProfilePage from './components/profile/ProfilePage';
 
 class App extends Component {
   constructor(props) {
@@ -42,7 +42,7 @@ class App extends Component {
           <PrivateRoute exact path="/" component={HomeComponent} />
           <Route path="/login" component={LoginComponent} />
           <Route path="/register" component={RegisterComponent} />
-          <Route path="/profile" component={ProfileComponent} />
+          <Route path="/profile" component={ProfilePage} />
           <Route path="/about" component={AboutComponent} />
           <Route path="/search" render={(props) => <SearchResultComponent {...props} onOpen={this.searchPageOpened} />} />
           <Route exact path="/apartment/create" component={CreateApatmentComponent} />

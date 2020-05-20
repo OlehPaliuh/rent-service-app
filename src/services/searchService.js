@@ -7,8 +7,9 @@ export const searchService = {
 function search(searchString) {
     const requestOptions = {
         method: 'GET',
-        headers: authHeader.addAuthHeader(),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+            'Authorization': authHeader.addAuthHeader(),
+            'Content-Type': 'application/json' }
     };
 
     return fetch(`/api/search?q=${searchString}`, requestOptions)
