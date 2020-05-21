@@ -22,6 +22,11 @@ code {
   margin-left: initial;
 }
 
+.ownContainer2 {
+  margin-top: 10px;
+  margin-left: initial;
+}
+
 .title {
   margin-bottom: 10px;
 }
@@ -84,13 +89,16 @@ code {
   margin: 20px;
 }
 
-.addApartmentButton {
-  background-color: #79be00 !important;
-  color: white !important;
-}
-
 .nav-bar-profile-icon {
   max-width: 40px;
   max-height: 40px;
   margin-right: 15px;
+}
+
+.add-apartment{
+  float: right;
+}
+
+.filter-comp {
+  margin-left: initial;
 }

@@ -6,6 +6,7 @@ const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('
 export const apartmentService = {
     getAllApatments,
     createApatment,
+    getFilteredApartment,
     currentUser: currentUserSubject.asObservable(),
     get currentUserValue() { return currentUserSubject.value }
 };
@@ -27,7 +28,8 @@ function getAllApatments() {
 
 function createApatment(apartment, location, imageLinks) {
 
-    const {  title, description, numberOfRooms, price, area, tags } = apartment
+    const {  title, description, numberOfRooms, price, area, tags,
+        totalArea, livingArea, allowPets, buildingType, floor } = apartment
     
     const accountId =  JSON.parse(localStorage.getItem('user')).id;
 
@@ -37,10 +39,27 @@ function createApatment(apartment, location, imageLinks) {
             'Authorization': authHeader.addAuthHeader(),
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({  title, description, numberOfRooms, price, area, location, tags, accountId, imageLinks})
+        body: JSON.stringify({  title, description, totalArea, livingArea, allowPets, buildingType, floor, numberOfRooms, price, area, location, tags, accountId, imageLinks})
     };
 
     return fetch("/api/apartment/create", requestOptions)
+    .then(authHeader.handleResponse)
+    .then(response => response.json());
+}
+
+function getFilteredApartment(apartmentFilter) {
+
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Authorization': authHeader.addAuthHeader(),
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(apartmentFilter)
+    };
+
+    return fetch("/api/apartment/filtering", requestOptions)
     .then(authHeader.handleResponse)
     .then(response => response.json());
 }

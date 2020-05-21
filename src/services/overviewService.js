@@ -8,8 +8,6 @@ export const overviewService = {
     getApartmentOverviewRequests
 };
 
-const currentUserId = JSON.parse(localStorage.getItem('user')).id;
-
 function requestApartmentOverview(apartmentId, accountId, dateTime, comment) {
 
     const requestOptions = {
@@ -42,6 +40,8 @@ function getApartmentOverviewRequests(apartmentId) {
 }
 
 function approveOverviewRequest(overviewId) {
+    const currentUserId = JSON.parse(localStorage.getItem('user')).id;
+
     const requestOptions = {
         method: 'PUT',
         headers: {
@@ -57,6 +57,8 @@ function approveOverviewRequest(overviewId) {
 }
 
 function rejectOverviewRequest(overviewId) {
+const currentUserId = JSON.parse(localStorage.getItem('user')).id;
+
     const requestOptions = {
         method: 'PUT',
         headers: {

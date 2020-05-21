@@ -1,0 +1,26 @@
+.input-max-min{
+    margin-right: 30px;
+}
+
+.row-max-min{
+    margin-top: 10px;
+}
+
+.filterButton {
+    width: 150px;
+}
+
+
+.filter-apartment {
+    float: right;
+    width: 150px;
+    margin-left: 15px;
+  }
+
+  .title{
+      align-content: center;
+  }
+
+  .form-style {
+      padding-left: 25px;
+  }

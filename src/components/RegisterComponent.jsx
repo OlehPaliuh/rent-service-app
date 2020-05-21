@@ -18,7 +18,8 @@ class RegisterComponent extends Component {
       },
       submitted: false,
       loading: false,
-      error: ''
+      error: false,
+      message: ""
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -59,12 +60,14 @@ class RegisterComponent extends Component {
           const { from } = this.props.location.state || { from: { pathname: "/" } };
           this.props.history.push(from);
         },
-        error => this.setState({ error, loading: false })
+        error => {
+          this.setState({ error: false, message: "Registration error", loading: false })
+        }
       );
   }
 
   render() {
-    const { user, error, submitted } = this.state;
+    const { user, error, submitted, message } = this.state;
 
     return (
       <div className="backgroundClass">
@@ -72,7 +75,7 @@ class RegisterComponent extends Component {
           <Form onSubmit={this.handleSubmit}>
             <h3 className="title">Sign up</h3>
             {error &&
-              <div className={'alert alert-danger'}>{error}</div>
+              <div className={'alert alert-danger'}>{message}</div>
             }
             <Row >
               <Col md={6}>

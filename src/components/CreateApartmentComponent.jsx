@@ -8,6 +8,7 @@ import MapContainer from '../googleMapService/MapContainer';
 import SuggestionListComponent from '../googleMapService/SuggestionListComponent';
 import Geocode from "react-geocode";
 import { ListGroup } from 'reactstrap';
+import { Checkbox } from "@material-ui/core";
 import Dropzone from 'react-dropzone'
 import "../index.css"
 import "../styles/LoginStyle.css"
@@ -23,8 +24,12 @@ class CreateApatmentComponent extends React.Component {
                 title: '',
                 description: '',
                 numberOfRooms: 1,
-                price: 0,
-                area: 1,
+                price: 1,
+                totalArea: 1,
+                livingArea: 1,
+                allowPets: false,
+                buildingType: "",
+                floor: 1,
                 tags: ''
             },
             apartmentLocation: {
@@ -52,6 +57,22 @@ class CreateApatmentComponent extends React.Component {
         for (let [keyObj] of Object.entries(apartmentObj)) {
             if (name === keyObj) {
                 apartmentObj[keyObj] = value;
+            }
+        }
+
+        this.setState({
+            apartment: apartmentObj
+        });
+    }
+
+    handleCheckboxChange = e => {
+        const { name, value } = e.target;
+
+        const apartmentObj = this.state.apartment;
+
+        for (let [keyObj] of Object.entries(apartmentObj)) {
+            if (name === keyObj) {
+                apartmentObj[keyObj] = !apartmentObj[keyObj];
             }
         }
 
@@ -134,13 +155,12 @@ class CreateApatmentComponent extends React.Component {
 
         // stop here if form is invalid
         if (!(apartment.title && apartment.description && apartment.price
-            && apartment.area && apartment.numberOfRooms && apartmentLocation.fullAddress)) {
+            && apartment.livingArea && apartment.totalArea && apartment.numberOfRooms && apartmentLocation.fullAddress)) {
             this.setState({ error: "Form is not filled", loading: false })
             return;
         }
 
-        if(apartment.price < 1 || apartment.area < 1 || apartment.numberOfRooms < 1 
-            || apartment.price > 1000000 || apartment.area > 1000000 || apartment.numberOfRooms > 1000000) {
+        if(apartment.price < 1 || apartment.livingArea < 1 || apartment.numberOfRooms < 1) {
             this.setState({ error: "Fields should be positive and less than 1 000 000", loading: false })
             return;
         }
@@ -159,10 +179,6 @@ class CreateApatmentComponent extends React.Component {
 
     handleImageUpload = () => {
         imageService.uploadImage(this.state.files);
-    }
-
-    handleChangeStatus = ({ meta }, status) => {
-        console.log(status, meta)
     }
 
     handleDrop = (filesToSate) => {
@@ -288,7 +304,8 @@ class CreateApatmentComponent extends React.Component {
                         <Label className="labelFont" for="price">Price</Label>
                         <Input
                             type="number"
-                            step="0.01"
+                            step="1"
+                            min="1"
                             name="price"
                             id="price"
                             placeholder="Enter price"
@@ -299,18 +316,79 @@ class CreateApatmentComponent extends React.Component {
                         }
                     </FormGroup>
                     <FormGroup>
-                        <Label className="labelFont" for="area">Area square</Label>
+                        <Label className="labelFont" for="Living area"> Living area square</Label>
                         <Input
                             type="number"
-                            step="0.01"
-                            name="area"
-                            id="area"
-                            placeholder="Enter area square"
-                            value={apartment.area}
+                            step="1"
+                            min="1"
+                            name="livingArea"
+                            id="livingArea"
+                            placeholder="Enter living area square"
+                            value={apartment.livingArea}
                             onChange={this.handleChange} />
-                        {submitted && !apartment.area &&
-                            <div className="alert alert-warning help-block">Area square is required</div>
+                        {submitted && !apartment.livingArea &&
+                            <div className="alert alert-warning help-block">Living area square is required</div>
                         }
+                    </FormGroup>
+                    <FormGroup>
+                        <Label className="labelFont" for="totalArea">Total area square</Label>
+                        <Input
+                            type="number"
+                            step="1"
+                            min="1"
+                            name="totalArea"
+                            id="totalArea"
+                            placeholder="Enter total area square"
+                            value={apartment.totalArea}
+                            onChange={this.handleChange} />
+                        {submitted && !apartment.totalArea &&
+                            <div className="alert alert-warning help-block">Total area square is required</div>
+                        }
+                    </FormGroup>
+                    <FormGroup>
+                        <Label className="labelFont" for="Floor number">Floor number</Label>
+                        <Input
+                            type="number"
+                            step="1"
+                            min="1"
+                            name="floor"
+                            id="floor"
+                            placeholder="Enter floor number"
+                            value={apartment.floor}
+                            onChange={this.handleChange} />
+                        {submitted && !apartment.floor &&
+                            <div className="alert alert-warning help-block">Tloor number is required</div>
+                        }
+                    </FormGroup>
+                    <FormGroup>
+                        <Row>
+                            <Col ms={10} lg={10}>
+                            <Label className="labelFont" for="buildingType">Select building type</Label>
+                        <Input 
+                        type="select" 
+                        name="buildingType" 
+                        id="buildingType" 
+                        value={apartment.buildingType}
+                        onChange={this.handleChange} 
+                        >
+                            <option>New building</option>
+                            <option>Old building</option>
+                        </Input>
+                            </Col>
+                            <Col ms={2} lg={2} className="allow-pets-check ">
+                            <Label className="labelFont" for="allowPets">Allow pets</Label>
+                                <Checkbox
+                                    id="allowPets"
+                                    name="allowPets"
+                                    color="primary"
+                                    checked={apartment.allowPets}
+                                    onChange={this.handleCheckboxChange}
+                                />
+                            </Col>
+                            {submitted && !apartment.buildingType &&
+                            <div className="alert alert-warning help-block">Building type is required</div>
+                        }
+                        </Row>
                     </FormGroup>
                     <FormGroup>
                         <Label className="labelFont" for="fullAddress">Address</Label>
