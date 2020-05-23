@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {  Button } from 'reactstrap';
+import {  Button, Alert} from 'reactstrap';
 import { userService } from "../../services/userService";
 import "../../styles/ProfileCard.css"
 
@@ -47,14 +47,21 @@ class ProfileCard extends Component {
                     </h6>
                     <h6 className="card-title profile-card-title">Email:  {this.state.account.email}</h6>
                     <h6 className="card-title profile-card-title">Phone:  {this.state.account.phoneNumber}</h6>
-                    {
-                        console.log("isApartmentOwner")}
-                      {  console.log(this.props.isApartmentOwner)
-                    }
+                   
                     {!this.props.isApartmentOwner &&
+                        <div>
+                           {this.state.account.maklerProbabilityScore >= 0.7 && 
+                            <Alert color="danger" className="makler-warning">
+                            Pay attention, possible makler!</Alert>
+                           }
+                            {this.state.account.maklerProbabilityScore > 0.4 && this.state.account.maklerProbabilityScore < 0.7 &&
+                             <Alert color="warning" className="makler-warning">
+                            Can be a makler</Alert>
+                           }
                     <Button color="primary" className="request-ovwerview-btn" onClick={this.props.requestReview}>
                             Request overview
                         </Button>
+                        </div>
                     }
                     {/* { this.state.apartment.loctaion &&
                         Object.keys(this.state.apartment.loctaion).map(function (key) {

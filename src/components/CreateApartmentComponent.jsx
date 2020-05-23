@@ -9,6 +9,7 @@ import SuggestionListComponent from '../googleMapService/SuggestionListComponent
 import Geocode from "react-geocode";
 import { ListGroup } from 'reactstrap';
 import { Checkbox } from "@material-ui/core";
+import { Icon } from 'semantic-ui-react'
 import Dropzone from 'react-dropzone'
 import "../index.css"
 import "../styles/LoginStyle.css"
@@ -44,7 +45,7 @@ class CreateApatmentComponent extends React.Component {
             submitted: false,
             loading: false,
             error: '',
-            photoError: false, 
+            photoError: false,
             photoErrorMessage: ""
         }
     }
@@ -96,16 +97,25 @@ class CreateApatmentComponent extends React.Component {
         });
     }
 
-    handleCancel = e => {
+    handleCancel = (e) => {
         e.preventDefault();
 
         const { apartment } = this.state;
 
+         this.state.fileLinks.map(item => {imageService.deleteImage(item)
+            .then(response => {
+                this.setState({ fileLinks: [], files: [] });
+            }, error => {
+                console.error("Failed delete image")
+            });});
+
         if (apartment.title || apartment.description || apartment.address) {
-            // this.setState({ error: "Form is not filled", loading: false })
-            window.confirm('Are you sure you wish to delete this item?')
-            return;
+            if(!window.confirm('Your data wil be lost, do you want to continue?')) {
+                return;
+            } 
         }
+        const { from } = this.props.location.state || { from: { pathname: "/" } };
+        this.props.history.push(from);
     }
 
     handleMapChange = location => {
@@ -160,7 +170,7 @@ class CreateApatmentComponent extends React.Component {
             return;
         }
 
-        if(apartment.price < 1 || apartment.livingArea < 1 || apartment.numberOfRooms < 1) {
+        if (apartment.price < 1 || apartment.livingArea < 1 || apartment.numberOfRooms < 1) {
             this.setState({ error: "Fields should be positive and less than 1 000 000", loading: false })
             return;
         }
@@ -183,7 +193,7 @@ class CreateApatmentComponent extends React.Component {
 
     handleDrop = (filesToSate) => {
 
-        this.setState({photoError: false, photoErrorMessage: ""})
+        this.setState({ photoError: false, photoErrorMessage: "" })
 
         const { files } = this.state;
         const { fileLinks } = this.state;
@@ -191,17 +201,35 @@ class CreateApatmentComponent extends React.Component {
         console.log(files.length);
         if ((files.length + filesToSate.length) < 8) {
             filesToSate.map(file => files.push(file));
-            this.setState({files: files});
+            this.setState({ files: files });
 
             imageService.uploadImage(filesToSate)
                 .then(data => {
                     data.map(link => fileLinks.push(link))
-                    this.setState({fileLinks: fileLinks});
+                    this.setState({ fileLinks: fileLinks });
                 });
         } else {
-            this.setState({photoError: true, photoErrorMessage: "You can load only 7 photos, size less 3 MB"});
-            return ;
+            this.setState({ photoError: true, photoErrorMessage: "You can load only 7 photos, size less 3 MB" });
+            return;
         }
+    }
+
+    handleImageDelete = (e) => {
+        const { value } = e.target;
+        console.log(value)
+        const { fileLinks } = this.state;
+        imageService.deleteImage(value)
+            .then(response => {
+                console.error(response)
+                const resultFiles = [];
+                fileLinks.map(item => {
+                    if (item !== value)
+                        resultFiles.push(item);
+                })
+                this.setState({ fileLinks: resultFiles });
+            }, error => {
+                console.error("Failed delete image")
+            });
     }
 
     handleAutocompleteClick = suggestion => {
@@ -235,16 +263,19 @@ class CreateApatmentComponent extends React.Component {
             return options;
         }
 
-        const {photoError, photoErrorMessage} = this.state;
+        const { photoError, photoErrorMessage } = this.state;
 
         const thumbs = this.state.fileLinks.map(link => (
             <div className="thumb" key={link}>
                 <div className="thumbInner">
-                    <img
-                        alt="Loaded"
-                        src={link}
-                        className="img"
-                    />
+                    <div class="img-wraps">
+                        <Button key={link} color="danger" size="sm" className="closes" value={link} onClick={this.handleImageDelete}>&times;</Button>
+                        <img
+                            alt="Loaded"
+                            src={link}
+                            className="img"
+                        />
+                    </div>
                 </div>
             </div>
         ))
@@ -363,20 +394,20 @@ class CreateApatmentComponent extends React.Component {
                     <FormGroup>
                         <Row>
                             <Col ms={10} lg={10}>
-                            <Label className="labelFont" for="buildingType">Select building type</Label>
-                        <Input 
-                        type="select" 
-                        name="buildingType" 
-                        id="buildingType" 
-                        value={apartment.buildingType}
-                        onChange={this.handleChange} 
-                        >
-                            <option>New building</option>
-                            <option>Old building</option>
-                        </Input>
+                                <Label className="labelFont" for="buildingType">Select building type</Label>
+                                <Input
+                                    type="select"
+                                    name="buildingType"
+                                    id="buildingType"
+                                    value={apartment.buildingType}
+                                    onChange={this.handleChange}
+                                >
+                                    <option>New building</option>
+                                    <option>Old building</option>
+                                </Input>
                             </Col>
                             <Col ms={2} lg={2} className="allow-pets-check ">
-                            <Label className="labelFont" for="allowPets">Allow pets</Label>
+                                <Label className="labelFont" for="allowPets">Allow pets</Label>
                                 <Checkbox
                                     id="allowPets"
                                     name="allowPets"
@@ -386,8 +417,8 @@ class CreateApatmentComponent extends React.Component {
                                 />
                             </Col>
                             {submitted && !apartment.buildingType &&
-                            <div className="alert alert-warning help-block">Building type is required</div>
-                        }
+                                <div className="alert alert-warning help-block">Building type is required</div>
+                            }
                         </Row>
                     </FormGroup>
                     <FormGroup>
@@ -437,11 +468,11 @@ class CreateApatmentComponent extends React.Component {
                                 </div>
                             )}
                         </Dropzone>
-                            <Input type="file"  
+                        <Input type="file"
                             name="photos"
                             id="photos"
                             hidden
-                            />
+                        />
                         <aside className="thumbsContainer">
                             {thumbs}
                         </aside>
@@ -464,7 +495,7 @@ class CreateApatmentComponent extends React.Component {
                             <Button color="blue" type="submit" className="btn btn-primary btn-block submitButton">Submit</Button>
                         </Col>
                         <Col md={6}>
-                            <Link color="red" type="reset" className="btn btn-danger btn-block cancelButton" to={`/`}>Cancel</Link>
+                            <Button color="red" type="reset" className="btn btn-danger btn-block cancelButton" onClick={this.handleCancel} >Cancel</Button>
                         </Col>
                     </Row>
                 </Form>

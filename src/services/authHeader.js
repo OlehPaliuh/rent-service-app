@@ -23,7 +23,7 @@ function handleAuthenticateResponse(response) {
         console.log("Text")
         console.log(text)
         const data = text && JSON.parse(text);
-        if (!response.ok) {
+        if (!response.ok && !response.created) {
             userService.logout();
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);

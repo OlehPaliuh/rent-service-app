@@ -20,3 +20,24 @@
 .card-title {
     margin: auto;
 }
+
+/* .icon-col{
+} */
+
+.like-icon{
+    float: right;
+}
+
+.like-icon-red{
+    float: right;
+    max-width: 50px;
+    max-height: 50px;
+    margin-bottom: 15px;
+}
+
+.like-icon-black {
+    float: right;
+    max-width: 45px;
+    max-height: 45px;
+    margin-bottom: 15px;
+}

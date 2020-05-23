@@ -9,7 +9,7 @@
 }
 
 .profile-card{
-    min-height: 310px;
+    min-height: 390px;
     max-height: 310px;
     margin-bottom: 15px;
     background-color: #F9F9FB !important;
@@ -21,6 +21,7 @@
 }
 
 .profile-card-title {
+    margin-top: 10px;
     text-align: center;
 }
 
@@ -28,4 +29,8 @@
     align-self: center !important;
     margin-left: 25%;
     width: 50%;
+}
+
+.makler-warning {
+    text-align: center;
 }

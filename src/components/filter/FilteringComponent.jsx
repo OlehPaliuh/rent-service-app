@@ -8,18 +8,10 @@ class FilteringComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-           
-            // filters: this.props.filter || {
-            //     hasPhotos: false,
-            //     allowPets: false,
-            //     newBuilding: false,
-            //     oldBuilding: false
-            // },
             error: false,
             message: ""
 
         }
-        // JSON.parse(localStorage.getItem('filter'))
     }
 
     componentDidMount() {
@@ -30,19 +22,11 @@ class FilteringComponent extends Component {
         const { name } = e.target;
 
         this.props.handleCheckboxChange(name);
-        // const { filters } = this.state;
-        // filters[name] = !filters[name];
-        // await this.setState({ filters: filters })
-        // localStorage.setItem('filter', JSON.stringify(filters));
     }
 
     handleInputChange = (e) => {
         const { name, value } = e.target;
         this.props.handleInputChange(name, value);
-        // const { filters } = this.state; 
-        // filters[name] = value;
-        // this.setState({filters: filters});
-        // localStorage.setItem('filter', JSON.stringify(filters));
     }
 
     handleSubmit = () => {
@@ -50,11 +34,7 @@ class FilteringComponent extends Component {
     }
 
     handleFilterReset = () => {
-        // this.setState({filter: {}});
-        // localStorage.removeItem('filter');
         this.props.onReset();
-        // console.log(this.state.filters);
-        // this.componentDidMount();
     }
 
     render() {
@@ -250,20 +230,6 @@ class FilteringComponent extends Component {
                              > Reset Filter </Button>
                         </Col>
                     </Row>
-                        {/* <Row className="row-max-min">
-                        <Col ms={1} lg={2}>
-                            <Label> Wall type: </Label>
-                        </Col>
-                        <Col ms={5} lg={5} className="input-max-min">
-                            <Input type="select" name="select" id="exampleSelect">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </Input>
-                        </Col>
-                    </Row> */}
                     </Form>
                 </div>
             </div>

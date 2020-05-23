@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import { Pagination, PaginationItem, PaginationLink, Col, Row, Button } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { Form, FormGroup, PaginationLink, Col, Row, Button } from 'reactstrap';
 import ApartmentCard from '../apartment/ApartmentCard'
+import { imageService } from "../../services/imageService";
 import { userService } from "../../services/userService";
 import "../../styles/ProfilePage.css"
 
@@ -12,13 +14,31 @@ class ProfilePage extends Component {
             account: {},
             loaded: false,
             ownList: [],
-            favouriteList: []
+            favouriteList: [],
+            avatarImage: ""
         }
     }
 
     componentDidMount() {
-        this.setState({ loading: false });
+        this.setState({ loaded: false });
         this.fetchOwnerAccountDetails();
+    }
+
+    handleUpdateAvatar = () => {
+        this.upload.click();
+    }
+
+    handleAvatarChange = (e) => {
+        const file = e.target.files[0];
+        this.setState({avatarImage: file});
+        if(file) {
+            imageService.updateProfileImage(file)
+               .then(responce => {
+                    this.setState({ account: responce });
+                },
+                    error => this.setState({ error })
+                );
+        }
     }
 
     fetchOwnerAccountDetails = () => {
@@ -30,16 +50,21 @@ class ProfilePage extends Component {
             );
     }
 
+    handleEditClick = () => {
+        const { from } = this.props.location.state || { from: { pathname: `/edit/${this.state.accountId}` } };
+        this.props.history.push(from); 
+    }
+
     render() {
 
         if (this.state.loaded) {
             this.state.account.ownApartmentList.map(item => this.state.ownList.push(<ApartmentCard key={item.id} apartment={item} />));
-            this.state.account.favouriteList.map(apartment => this.state.favouriteList.push(<ApartmentCard key={apartment.id} apartment={apartment} />));
+            console.log("Favourite");
+            this.state.account.favouriteList.map(favourite => this.state.favouriteList.push(<ApartmentCard key={favourite.apartment.id} apartment={favourite.apartment} />));
         }
 
         return (
             <div>
-
                 <div className="container profile-container">
                     <Row>
                         <Col>
@@ -49,7 +74,14 @@ class ProfilePage extends Component {
                     {this.state.loaded &&
                         <Row>
                             <Col ms={3}>
-                                <img className="profile-image" src="/images/profile.png" alt="Avatar" />
+                                <img className="profile-image" src={this.state.account.avatarPath || "/images/profile.png"} alt="Avatar" />
+                                <Row >
+                                        <Col >
+                                        <input hidden name="avatarImage" type='file' id='single' ref={(ref) => this.upload = ref}
+                                        accept="image/*" style={{display: 'none'}} onChange={this.handleAvatarChange} /> 
+                                             <Button color="primary" className="update-image-button" onClick={this.handleUpdateAvatar}>Update image</Button>
+                                             </Col>
+                                        </Row>
                             </Col>
                             <Col ms={9}>
                                 <Row>
@@ -58,7 +90,7 @@ class ProfilePage extends Component {
                                         <p className="nickname">nickname: {this.state.account.username}</p>
                                     </Col>
                                     <Col lg={5} ms={2} >
-                                        <Button color="warning" className="btn edit-button">
+                                        <Button color="warning" className="btn edit-button" onClick={this.handleEditClick}>
                                             Edit
                                     </Button>
                                     </Col>
@@ -66,7 +98,11 @@ class ProfilePage extends Component {
                                 <h6 className="info-text">Email: {this.state.account.email}</h6>
                                 <h6 className="info-text">Phone: {this.state.account.phoneNumber}</h6>
                                 <h6 className="info-text">Role: {this.state.account.role.name}</h6>
-                                <h6 className="info-text">Account Locked: {this.state.account.isLocked ? "Yes" : "No"}</h6>
+                                <h6 className="info-text">Account Locked: {this.state.account.locked ? "Yes" : "No"}</h6>
+
+                                {this.state.account.locked &&
+                                    <h6 className="info-text">Lock reason: {this.state.account.lockReason}</h6>
+                                }
                             </Col>
                         </Row>
                     }
@@ -75,7 +111,7 @@ class ProfilePage extends Component {
                             <h2 className="title">Own apartment list</h2>
 
                             <Row >
-                                {this.state.ownList.map(app => <Col className="" md={3} lg={3}> {app} </Col>)}
+                                {this.state.ownList.map(app => <Col className="" md={4} lg={4}> {app} </Col>)}
                             </Row>
                         </div>
                     }
@@ -85,7 +121,7 @@ class ProfilePage extends Component {
                             <h2 className="title">Favourite list</h2>
                             
                             <Row >
-                                {this.state.favouriteList.map(app => <Col className="" md={3} lg={3}> {app} </Col>)}
+                                {this.state.favouriteList.map(app => <Col className="" md={4} lg={4}> {app} </Col>)}
                             </Row>
                         </div>
                     }

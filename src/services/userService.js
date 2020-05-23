@@ -10,6 +10,7 @@ export const userService = {
     register,
     getUserDetails,
     getOwnerAccountDetails,
+    updateAccount,
     currentUser: currentUserSubject.asObservable(),
     get currentUserValue() { return currentUserSubject.value }
 };
@@ -66,6 +67,24 @@ function register(user) {
         });
 }
 
+function updateAccount(prifile) {
+
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Authorization': authHeader.addAuthHeader(),
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(prifile)
+    };
+
+    const accountId = JSON.parse(localStorage.getItem('user')).id;
+
+    return fetch(`/api/user/account/${accountId}/update`, requestOptions)
+        .then(authHeader.handleResponse)
+        .then(response => response.json());
+}
+
 function getUserDetails(accountId) {
     const requestOptions = {
         method: 'GET',
@@ -103,3 +122,5 @@ function getAll() {
     return fetch("/api/admin/all_users", requestOptions)
         .then(authHeader.handleResponse);
 }
+
+

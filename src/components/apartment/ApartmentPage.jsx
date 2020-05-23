@@ -4,7 +4,6 @@ import MapContainer from '../../googleMapService/MapContainer';
 import ModalComponent from '../modal/ModalComponent';
 import ProfileCard from '../profile/ProfileCard';
 import Lightbox from 'react-image-lightbox';
-import { apartmentService } from "../../services/apartmentService";
 import { overviewService } from "../../services/overviewService";
 import 'react-image-lightbox/style.css';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
@@ -58,9 +57,9 @@ class ApartmentPage extends React.Component {
     }
 
     fetchRealtyById = async () => {
-        this.setState({loadedAccount: false});
+        this.setState({ loadedAccount: false });
 
-        const currentUserId =  JSON.parse(localStorage.getItem('user')).id;
+        const currentUserId = JSON.parse(localStorage.getItem('user')).id;
 
         await fetch(`/api/apartment/${this.state.id}`)
             .then(response => response.json())
@@ -72,7 +71,7 @@ class ApartmentPage extends React.Component {
                     loadedAccount: true
                 })
                 if (data.accountId === currentUserId) {
-                    this.setState({ isApartmentOwner: true})
+                    this.setState({ isApartmentOwner: true })
                 }
             });
     };
@@ -112,90 +111,116 @@ class ApartmentPage extends React.Component {
                 </Row>
                 <Row>
                     <Col md={4}>
-                         { this.state.loadedAccount && <ProfileCard 
-                                            id={apartmentItem.accountId} 
-                                            isApartmentOwner={isApartmentOwner}
-                                            requestReview={this.handleRequestOverview}/>
-                            }
+                        {this.state.loadedAccount && <ProfileCard
+                            id={apartmentItem.accountId}
+                            isApartmentOwner={isApartmentOwner}
+                            requestReview={this.handleRequestOverview} />
+                        }
                     </Col>
                     <Col md={8}>
-                        <Table bordered striped>
-                            <tbody>
-                                {(!this.state.loading && apartmentItem) &&
-                                    Object.keys(apartmentItem).map(function (key) {
-                                        if (key === "imageLinks" || key === "id"
-                                            || key === "title" || key === "accountId") {
-                                            console.log("imageLinks")
-                                        } else if (key !== 'location') {
-                                            return (
-                                                <tr key={key}>
-                                                    <th scope="row">{key}</th>
-                                                    <td>{apartmentItem[key]}</td>
-                                                </tr>)
-                                        } else {
-                                            return (
-                                                <tr key={key}>
-                                                    <th scope="row">{key}</th>
-                                                    <td>{apartmentItem[key].fullAddress}</td>
-                                                </tr>)
-                                        }
-                                    })
-                                }
-                            </tbody>
-                        </Table>
+                        {(!this.state.loading && apartmentItem) &&
+                            <Table bordered striped>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">Description</th>
+                                        <td>{apartmentItem.description}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Price</th>
+                                        <td>{apartmentItem.price}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Total Area</th>
+                                        <td>{apartmentItem.totalArea}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Floor</th>
+                                        <td>{apartmentItem.floor}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Lvivng Area</th>
+                                        <td>{apartmentItem.livingArea}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Building Type</th>
+                                        <td>{apartmentItem.buildingType === "NEW_BUILDING" ? "new building" : "old building"}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">AllowPets</th>
+                                        <td>{apartmentItem.allowPets === true ? "Yes" : "No"}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Rooms</th>
+                                        <td>{apartmentItem.numberOfRooms}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Tags</th>
+                                        <td>{apartmentItem.tags}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Location</th>
+                                        <td>{apartmentItem.location.fullAddress}</td>
+                                    </tr>
+                                </tbody>
+                            </Table>
+                        }
                     </Col>
                 </Row>
 
-                <ModalComponent 
-                accountId={this.state.apartmentItem.accountId} 
-                apartmentId={this.state.apartmentItem.id} 
-                modal={this.state.modalOpen}
-                onCancel={this.handleCancel}/>
+                <ModalComponent
+                    accountId={this.state.apartmentItem.accountId}
+                    apartmentId={this.state.apartmentItem.id}
+                    modal={this.state.modalOpen}
+                    onCancel={this.handleCancel} />
 
-                <MapContainer
+                        <div className="map-cont">
+                        <MapContainer
                     onClick={this.ckick}
                     location={apartmentItem.location}
                     center={{ lat: apartmentItem.location.latitude, lng: apartmentItem.location.longitude }}
                 />
+                        </div>
+              
 
-
-                
                 <Row>
                     <Col lg={5} ms={6}>
-                <h4 className="title">Photos</h4>
 
-                {this.state.photoLoaded &&
+                        {this.state.photoLoaded && apartmentItem.imageLinks.length > 0 &&
+                        <h4 className="title">Photos</h4>
+                        }      
 
-                    <CarouselProvider
-                        naturalSlideWidth={60}
-                        naturalSlideHeight={60}
-                        totalSlides={apartmentItem.imageLinks.length}
-                        className="sliderContainer"
-                    >
-                        <Slider
-                            onClick={() => this.setState({ isOpen: true })}
-                        >
-                            {apartmentItem.imageLinks.map(slide =>
-                                <Slide key={slide}
-                                    index={slide}
+                        {this.state.photoLoaded && apartmentItem.imageLinks.length > 0 &&
+
+                            <CarouselProvider
+                                naturalSlideWidth={60}
+                                naturalSlideHeight={60}
+                                totalSlides={apartmentItem.imageLinks.length}
+                                className="sliderContainer"
+                            >
+                                <Slider
+                                    onClick={() => this.setState({ isOpen: true })}
                                 >
-                                    <img src={slide} className="item" alt={slide} />
-                                </Slide>)}
-                        </Slider>
-                        <ButtonBack className="prev-button btn btn-primary">Back</ButtonBack>
-                        <ButtonNext className="next-button btn btn-primary">Next</ButtonNext>
-                    </CarouselProvider>
-                }
+                                    {apartmentItem.imageLinks.map(slide =>
+                                        <Slide key={slide}
+                                            index={slide}
+                                        >
+                                            <img src={slide} className="item" alt={slide} />
+                                        </Slide>)}
+                                </Slider>
+                                <ButtonBack className="prev-button btn btn-primary">Back</ButtonBack>
+                                <ButtonNext className="next-button btn btn-primary">Next</ButtonNext>
+                            </CarouselProvider>
+                        }
                     </Col>
 
-                {this.state.isApartmentOwner && this.state.loadedOverviews && this.state.overviewRequests.length > 0 &&
-                    <Col lg={6} ms={6}>
-                       <h4 className="title">Active overview requests</h4>
-                        <Row>
-                        {this.state.overviewRequests.map(overview => <Col ms={3}><OverviewCard overview={overview} /></Col>)}
-                        </Row>
-                    </Col>
-            }
+                    {this.state.isApartmentOwner && this.state.loadedOverviews && this.state.overviewRequests.length > 0 &&
+                        <Col lg={6} ms={6}>
+                            <h4 className="title">Active overview requests</h4>
+                            <Row>
+                                {this.state.overviewRequests.map(overview => <Col ms={3}><OverviewCard overview={overview} /></Col>)}
+                            </Row>
+                        </Col>
+                    }
                 </Row>
 
                 {isOpen && (

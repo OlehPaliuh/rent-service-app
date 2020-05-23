@@ -12,6 +12,7 @@ import RegisterComponent from './components/RegisterComponent';
 import CreateApatmentComponent from './components/CreateApartmentComponent';
 import SearchResultComponent from './components/SearchResultComponent';
 import ProfilePage from './components/profile/ProfilePage';
+import EditProfilePage from './components/profile/EditProfilePage';
 
 class App extends Component {
   constructor(props) {
@@ -43,6 +44,7 @@ class App extends Component {
           <Route path="/login" component={LoginComponent} />
           <Route path="/register" component={RegisterComponent} />
           <Route path="/profile" component={ProfilePage} />
+          <Route path="/edit/:id" component={EditProfilePage} />
           <Route path="/about" component={AboutComponent} />
           <Route path="/search" render={(props) => <SearchResultComponent {...props} onOpen={this.searchPageOpened} />} />
           <Route exact path="/apartment/create" component={CreateApatmentComponent} />

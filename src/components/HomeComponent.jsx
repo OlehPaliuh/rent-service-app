@@ -20,6 +20,7 @@ class HomeComponent extends Component {
 
     componentWillMount() {
         this.fetchAllApartments()
+        // this.fetchAllFavourite();
     }
 
     fetchAllApartments = () => {
@@ -30,6 +31,10 @@ class HomeComponent extends Component {
         apartmentService.getAllApatments()
             .then(array => this.setState({ apatmentArray: array.map(item => <ApartmentCard key={item.id} apartment={item} />), loading: false }));
     }
+
+    // fetchAllFavourite = () => {
+
+    // }
 
     handleFilteringApartments = () => {
         this.setState({
