@@ -14,6 +14,12 @@
     margin-bottom: 15px;
 }
 
+.title2{
+    text-align: center;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
 .card-text-price{
     color: green;
 }

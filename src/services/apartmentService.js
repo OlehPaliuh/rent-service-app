@@ -7,11 +7,12 @@ export const apartmentService = {
     getAllApatments,
     createApatment,
     getFilteredApartment,
+    updateApartmentStatus,
     currentUser: currentUserSubject.asObservable(),
     get currentUserValue() { return currentUserSubject.value }
 };
 
-function getAllApatments() {
+function getAllApatments(sort) {
     const requestOptions = {
         method: 'GET',
         headers: {
@@ -19,7 +20,9 @@ function getAllApatments() {
         }
     };
 
-    return fetch("/api/apartment/all", requestOptions)
+    console.log(sort);
+
+    return fetch(`/api/apartment/all?sortBy=${sort}`, requestOptions)
     .then(authHeader.handleResponse)
     .then(response => response.json(),
         error => {console.error(error) 
@@ -47,7 +50,9 @@ function createApatment(apartment, location, imageLinks) {
     .then(response => response.json());
 }
 
-function getFilteredApartment(apartmentFilter) {
+function getFilteredApartment(apartmentFilter, sort) {
+
+    console.log(sort);
 
     const requestOptions = {
         method: 'POST',
@@ -59,7 +64,39 @@ function getFilteredApartment(apartmentFilter) {
         body: JSON.stringify(apartmentFilter)
     };
 
-    return fetch("/api/apartment/filtering", requestOptions)
+    return fetch(`/api/apartment/filtering?sortBy=${sort}`, requestOptions)
     .then(authHeader.handleResponse)
     .then(response => response.json());
 }
+
+function updateApartmentStatus(apartmentId, status) {
+
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Authorization': authHeader.addAuthHeader(),
+            'Content-Type': 'application/json'
+        }
+    };
+
+    return fetch(`/api/apartment/${apartmentId}/status/update?status=${status}`, requestOptions)
+    .then(authHeader.handleResponse)
+    .then(response => response.json());
+}
+
+// function getSortedApartments(sort) {
+
+// console.log(sort)
+
+//     const requestOptions = {
+//         method: 'GET',
+//         headers: {
+//             'Authorization': authHeader.addAuthHeader(),
+//             'Content-Type': 'application/json'
+//         }
+//     };
+
+//     return fetch(`/api/apartment/sort?sortBy=${sort}`, requestOptions)
+//     .then(authHeader.handleResponse)
+//     .then(response => response.json());
+// }

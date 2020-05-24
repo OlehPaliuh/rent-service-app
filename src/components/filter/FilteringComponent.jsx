@@ -10,17 +10,11 @@ class FilteringComponent extends Component {
         this.state = {
             error: false,
             message: ""
-
         }
-    }
-
-    componentDidMount() {
-        this.props.onSubmitFiltering();
     }
 
     handleCheckboxChange = async (e) => {
         const { name } = e.target;
-
         this.props.handleCheckboxChange(name);
     }
 

@@ -43,12 +43,12 @@ class App extends Component {
           <PrivateRoute exact path="/" component={HomeComponent} />
           <Route path="/login" component={LoginComponent} />
           <Route path="/register" component={RegisterComponent} />
-          <Route path="/profile" component={ProfilePage} />
-          <Route path="/edit/:id" component={EditProfilePage} />
-          <Route path="/about" component={AboutComponent} />
+          <PrivateRoute path="/profile" component={ProfilePage} />
+          <PrivateRoute path="/edit/:id" component={EditProfilePage} />
+          <PrivateRoute path="/about" component={AboutComponent} />
           <Route path="/search" render={(props) => <SearchResultComponent {...props} onOpen={this.searchPageOpened} />} />
-          <Route exact path="/apartment/create" component={CreateApatmentComponent} />
-          <Route path="/apartment/:id" component={ApartmentPage} />
+          <PrivateRoute exact path="/apartment/create" component={CreateApatmentComponent} />
+          <PrivateRoute path="/apartment/:id" component={ApartmentPage} />
         </Switch>
       </div>
     )

@@ -102,3 +102,8 @@ code {
 .filter-comp {
   margin-left: initial;
 }
+
+.sort-label{
+  margin-top: 8px;
+  margin-left: 11px;
+}

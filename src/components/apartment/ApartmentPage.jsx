@@ -8,10 +8,12 @@ import { overviewService } from "../../services/overviewService";
 import 'react-image-lightbox/style.css';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
+import Moment from 'moment';
 import "../../index.css"
 import "../../styles/LoginStyle.css"
 import "../../styles/ApartmentPage.css"
 import OverviewCard from "../overview/OverviewCard";
+import ModalChangeApartmentStatus from "../modal/ModalChangeApartmentStatus";
 
 const Location = {
     administrativeArea: String,
@@ -41,6 +43,7 @@ class ApartmentPage extends React.Component {
             photoLoaded: false,
             loadedAccount: false,
             modalOpen: false,
+            statusModalOpen: false,
             isApartmentOwner: false,
             loadedOverviews: false,
             overviewRequests: []
@@ -50,10 +53,6 @@ class ApartmentPage extends React.Component {
     componentDidMount() {
         this.fetchRealtyById()
         this.fetchApartmentOverviewRequests()
-    }
-
-    ckick = () => {
-        console.log("click");
     }
 
     fetchRealtyById = async () => {
@@ -90,9 +89,31 @@ class ApartmentPage extends React.Component {
         this.setState({ modalOpen: false });
     }
 
+    handleStatusModalCancel = () => {
+        this.setState({ statusModalOpen: false });
+    }
+
+    // handleCreateComplainCancel = () => {
+    //     this.setState({ modalComplainOpen: false });
+    // }
+
+    handleChangeStatus = () => {
+        this.setState({ statusModalOpen: true });
+    }
+
+    hadleStatusChanged = (status) => {
+        const { apartmentItem } = this.state;
+        apartmentItem.status= status;
+        this.setState({ apartmentItem: apartmentItem});
+    }
+
     handleRequestOverview = () => {
         this.setState({ modalOpen: true });
     }
+
+    // handleCreateComplain = () => {
+    //     this.setState({ modalComplainOpen: true });
+    // }
 
     render() {
 
@@ -100,6 +121,9 @@ class ApartmentPage extends React.Component {
             return <em>Loading apatment...</em>
         }
         const { photoIndex, isOpen, apartmentItem, isApartmentOwner } = this.state;
+
+        const statusDate = new Date(apartmentItem.statusDateChange);
+        const formattedDateTime = Moment(statusDate).format('LLL');
 
         return (
             <div className="container ownContainer">
@@ -110,11 +134,36 @@ class ApartmentPage extends React.Component {
                     </Col>
                 </Row>
                 <Row>
+                    <Col>
+                     {this.state.isApartmentOwner && 
+                         <h6 className="title2">Status:  {this.state.apartmentItem.status}  <Button color="warning" onClick={this.handleChangeStatus}>Change</Button></h6>
+                     }
+                     {!this.state.isApartmentOwner && 
+                         <h6 className="title2">Status:  {this.state.apartmentItem.status}</h6>
+                     }
+                         </Col>
+                </Row>
+                <Row>
+                    <Col>
+                         <h6 className="title2">Last modification: {formattedDateTime}</h6>
+                    </Col>
+                </Row>
+
+                <ModalChangeApartmentStatus
+                    apartmentId={this.state.apartmentItem.id}
+                    modal={this.state.statusModalOpen}
+                    status={this.state.apartmentItem.status}
+                    onCancel={this.handleStatusModalCancel} 
+                    onSubmit={this.hadleStatusChanged} 
+                    />
+
+                <Row>
                     <Col md={4}>
                         {this.state.loadedAccount && <ProfileCard
                             id={apartmentItem.accountId}
                             isApartmentOwner={isApartmentOwner}
-                            requestReview={this.handleRequestOverview} />
+                            requestReview={this.handleRequestOverview}
+                             />
                         }
                     </Col>
                     <Col md={8}>

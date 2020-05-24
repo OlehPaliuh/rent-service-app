@@ -9,8 +9,8 @@
 }
 
 .profile-card{
-    min-height: 390px;
-    max-height: 310px;
+    min-height: 450px;
+    max-height: 300px;
     margin-bottom: 15px;
     background-color: #F9F9FB !important;
 }
@@ -26,9 +26,9 @@
 }
 
 .request-ovwerview-btn {
-    align-self: center !important;
-    margin-left: 25%;
-    width: 50%;
+    /* align-self: center !important; */
+    /* margin-left: 25%; */
+    width: 100%;
 }
 
 .makler-warning {
