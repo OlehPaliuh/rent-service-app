@@ -3,13 +3,11 @@ import { Col, Row, Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import { apartmentService } from '../services/apartmentService';
 import { geocodeService } from '../googleMapService/geocodeService';
 import { imageService } from '../services/imageService';
-import { Link } from 'react-router-dom';
 import MapContainer from '../googleMapService/MapContainer';
 import SuggestionListComponent from '../googleMapService/SuggestionListComponent';
 import Geocode from "react-geocode";
 import { ListGroup } from 'reactstrap';
 import { Checkbox } from "@material-ui/core";
-import { Icon } from 'semantic-ui-react'
 import Dropzone from 'react-dropzone'
 import "../index.css"
 import "../styles/LoginStyle.css"
@@ -29,7 +27,7 @@ class CreateApatmentComponent extends React.Component {
                 totalArea: 1,
                 livingArea: 1,
                 allowPets: false,
-                buildingType: "",
+                buildingType: "NEW_BUILDING",
                 floor: 1,
                 tags: ''
             },
@@ -402,8 +400,8 @@ class CreateApatmentComponent extends React.Component {
                                     value={apartment.buildingType}
                                     onChange={this.handleChange}
                                 >
-                                    <option>New building</option>
-                                    <option>Old building</option>
+                                    <option value="NEW_BUILDING">New building</option>
+                                    <option value="OLD_BUILDING">Old building</option>
                                 </Input>
                             </Col>
                             <Col ms={2} lg={2} className="allow-pets-check ">

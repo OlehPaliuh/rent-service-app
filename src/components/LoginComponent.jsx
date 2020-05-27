@@ -57,8 +57,8 @@ class LoginComponent extends Component {
             <h3 className="title">Sign In</h3>
 
             {error &&
-                            <div className={'alert alert-danger'}>{error}</div>
-                        }
+                <div className={'alert alert-danger'}>{error}</div>
+            }
 
             <FormGroup className="form-group">
                 <Label  className="labelFont" for="username">Username</Label>

@@ -1,5 +1,5 @@
 import React from "react"
-import { Col, Row, Table, Button } from 'reactstrap';
+import { Col, Row, Table, Button, ToastHeader, Toast, ToastBody, Label } from 'reactstrap';
 import MapContainer from '../../googleMapService/MapContainer';
 import ModalComponent from '../modal/ModalComponent';
 import ProfileCard from '../profile/ProfileCard';
@@ -13,7 +13,9 @@ import "../../index.css"
 import "../../styles/LoginStyle.css"
 import "../../styles/ApartmentPage.css"
 import OverviewCard from "../overview/OverviewCard";
+import { Comment, Form, Header } from 'semantic-ui-react'
 import ModalChangeApartmentStatus from "../modal/ModalChangeApartmentStatus";
+import CommentBox from "../comment/CommentBox";
 
 const Location = {
     administrativeArea: String,
@@ -50,7 +52,7 @@ class ApartmentPage extends React.Component {
         }
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.fetchRealtyById()
         this.fetchApartmentOverviewRequests()
     }
@@ -93,27 +95,40 @@ class ApartmentPage extends React.Component {
         this.setState({ statusModalOpen: false });
     }
 
-    // handleCreateComplainCancel = () => {
-    //     this.setState({ modalComplainOpen: false });
-    // }
-
     handleChangeStatus = () => {
         this.setState({ statusModalOpen: true });
     }
 
     hadleStatusChanged = (status) => {
         const { apartmentItem } = this.state;
-        apartmentItem.status= status;
-        this.setState({ apartmentItem: apartmentItem});
+        apartmentItem.status = status;
+        this.setState({ apartmentItem: apartmentItem });
     }
 
     handleRequestOverview = () => {
         this.setState({ modalOpen: true });
     }
 
-    // handleCreateComplain = () => {
-    //     this.setState({ modalComplainOpen: true });
-    // }
+    handleDeleteComment = (id) => {
+        const { apartmentItem } = this.state;
+        const comments = [];
+        apartmentItem.comments.map(item => {
+            if(item.id !== id) {
+                comments.push(item);
+            }
+        })
+        apartmentItem.comments = comments;
+
+        this.setState({apartmentItem: apartmentItem});
+    }
+
+    handleAddComment = (comment) => {
+        const { apartmentItem } = this.state;
+       
+        apartmentItem.comments.push(comment);
+
+        this.setState({apartmentItem: apartmentItem});
+    }
 
     render() {
 
@@ -135,17 +150,17 @@ class ApartmentPage extends React.Component {
                 </Row>
                 <Row>
                     <Col>
-                     {this.state.isApartmentOwner && 
-                         <h6 className="title2">Status:  {this.state.apartmentItem.status}  <Button color="warning" onClick={this.handleChangeStatus}>Change</Button></h6>
-                     }
-                     {!this.state.isApartmentOwner && 
-                         <h6 className="title2">Status:  {this.state.apartmentItem.status}</h6>
-                     }
-                         </Col>
+                        {this.state.isApartmentOwner &&
+                            <h6 className="title2">Status:  {this.state.apartmentItem.status}  <Button color="warning" onClick={this.handleChangeStatus}>Change</Button></h6>
+                        }
+                        {!this.state.isApartmentOwner &&
+                            <h6 className="title2">Status:  {this.state.apartmentItem.status}</h6>
+                        }
+                    </Col>
                 </Row>
                 <Row>
                     <Col>
-                         <h6 className="title2">Last modification: {formattedDateTime}</h6>
+                        <h6 className="title2">Last modification: {formattedDateTime}</h6>
                     </Col>
                 </Row>
 
@@ -153,9 +168,9 @@ class ApartmentPage extends React.Component {
                     apartmentId={this.state.apartmentItem.id}
                     modal={this.state.statusModalOpen}
                     status={this.state.apartmentItem.status}
-                    onCancel={this.handleStatusModalCancel} 
-                    onSubmit={this.hadleStatusChanged} 
-                    />
+                    onCancel={this.handleStatusModalCancel}
+                    onSubmit={this.hadleStatusChanged}
+                />
 
                 <Row>
                     <Col md={4}>
@@ -163,17 +178,13 @@ class ApartmentPage extends React.Component {
                             id={apartmentItem.accountId}
                             isApartmentOwner={isApartmentOwner}
                             requestReview={this.handleRequestOverview}
-                             />
+                        />
                         }
                     </Col>
                     <Col md={8}>
                         {(!this.state.loading && apartmentItem) &&
                             <Table bordered striped>
                                 <tbody>
-                                    <tr>
-                                        <th scope="row">Description</th>
-                                        <td>{apartmentItem.description}</td>
-                                    </tr>
                                     <tr>
                                         <th scope="row">Price</th>
                                         <td>{apartmentItem.price}</td>
@@ -215,28 +226,37 @@ class ApartmentPage extends React.Component {
                         }
                     </Col>
                 </Row>
-
+                <Row>
+                    <Table bordered striped>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Description</th>
+                                <td>{apartmentItem.description}</td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                </Row>
                 <ModalComponent
                     accountId={this.state.apartmentItem.accountId}
                     apartmentId={this.state.apartmentItem.id}
                     modal={this.state.modalOpen}
                     onCancel={this.handleCancel} />
 
-                        <div className="map-cont">
-                        <MapContainer
-                    onClick={this.ckick}
-                    location={apartmentItem.location}
-                    center={{ lat: apartmentItem.location.latitude, lng: apartmentItem.location.longitude }}
-                />
-                        </div>
-              
+                <div className="map-cont">
+                    <MapContainer
+                        onClick={this.ckick}
+                        location={apartmentItem.location}
+                        center={{ lat: apartmentItem.location.latitude, lng: apartmentItem.location.longitude }}
+                    />
+                </div>
+
 
                 <Row>
                     <Col lg={5} ms={6}>
 
                         {this.state.photoLoaded && apartmentItem.imageLinks.length > 0 &&
-                        <h4 className="title">Photos</h4>
-                        }      
+                            <h4 className="title">Photos</h4>
+                        }
 
                         {this.state.photoLoaded && apartmentItem.imageLinks.length > 0 &&
 
@@ -271,6 +291,30 @@ class ApartmentPage extends React.Component {
                         </Col>
                     }
                 </Row>
+
+                <Label className="title"> <h4>Comments</h4></Label>
+
+                {this.state.apartmentItem && 
+                    <CommentBox className="commentBox" 
+                        apartmentId={this.state.apartmentItem.id}
+                        comments={this.state.apartmentItem.comments}
+                        deleteComment={this.handleDeleteComment}
+                        addComment={this.handleAddComment}
+                        />
+                }
+
+                {/* <div className="comments-container">
+        
+                    <Toast className="comment-item">
+                        <ToastHeader>
+                            Reactstrap
+                     </ToastHeader>
+                        <ToastBody>
+                            This is a toast on a white background — check it out!
+                     </ToastBody>
+                    </Toast>
+                </div> */}
+
 
                 {isOpen && (
                     <Lightbox

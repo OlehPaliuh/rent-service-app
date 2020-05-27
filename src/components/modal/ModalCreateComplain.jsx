@@ -103,7 +103,7 @@ class ModalCreateComplain extends Component {
                         </Form>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" type="submit" onClick={this.handleSubmit}>Submit request</Button>{' '}
+                        <Button color="primary" type="submit" onClick={this.handleSubmit}>Send complaint</Button>{' '}
                         <Button color="secondary" onClick={this.toggle}>Cancel</Button>
                     </ModalFooter>
                 </Modal>

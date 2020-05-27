@@ -58,12 +58,6 @@ class NavbarComponent extends Component {
                         <li className="nav-item active">
                             <NavLink href="/">Home <span className="sr-only">(current)</span></NavLink>
                         </li>
-                        <li className="nav-item ">
-                            <NavLink href="/#">Link</NavLink >
-                        </li>
-                        <li className="nav-item active">
-                            <NavLink href="/about/">About</NavLink>
-                        </li>
                     </ul>
                     <Link to={`/profile`} >
                         <img src="/images/profile_navBar_icon.png" className="nav-bar-profile-icon" />
