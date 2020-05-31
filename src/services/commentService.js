@@ -5,23 +5,6 @@ export const commentService = {
     deleteComment
 };
 
-// function getAllApatments(sort) {
-//     const requestOptions = {
-//         method: 'GET',
-//         headers: {
-//             'Authorization': authHeader.addAuthHeader()
-//         }
-//     };
-
-//     console.log(sort);
-
-//     return fetch(`/api/apartment/all?sortBy=${sort}`, requestOptions)
-//     .then(authHeader.handleResponse)
-//     .then(response => response.json(),
-//         error => {console.error(error) 
-//             return []});
-// }
-
 function addComment(apartmentId, content) {
     
     const accountId =  JSON.parse(localStorage.getItem('user')).id;

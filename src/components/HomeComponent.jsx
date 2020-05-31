@@ -21,9 +21,6 @@ class HomeComponent extends Component {
     }
 
     componentWillMount() {
-        console.log("componentWillMount")
-        console.log(this.state.filter)
-        console.log(this.state.filterSet)
         if(this.state.filter && this.state.filterSet) {
             this.handleFilteringApartments()
         } else {
@@ -37,8 +34,6 @@ class HomeComponent extends Component {
             loading: true
         });
 
-        console.log("all")
-
         apartmentService.getAllApatments(this.state.sortBy)
             .then(array => this.setState({ apatmentArray: array.map(item => <ApartmentCard key={item.id} apartment={item} />), loading: false }));
     }
@@ -47,8 +42,6 @@ class HomeComponent extends Component {
         this.setState({
             loading: true
         });
-
-        console.log("filter")
 
         apartmentService.getFilteredApartment(this.state.filter, this.state.sortBy)
             .then(response => {
@@ -91,15 +84,6 @@ class HomeComponent extends Component {
         localStorage.setItem('sortBy', JSON.stringify(value));
         await this.delay(200);
         this.componentWillMount();
-        // if(value !== "DISABLE") {
-        //     apartmentService.getSortedApartments(value)
-        //         .then(response => {
-        //             this.setState({apatmentArray: response.map(item => <ApartmentCard key={item.id} apartment={item} />), loading: false});
-        //      });
-        // } else {
-        //     this.fetchAllApartments();
-        // }
-        // console.log(value);
     }
 
     render() {

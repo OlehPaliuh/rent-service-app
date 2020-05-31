@@ -1,15 +1,11 @@
 import { authHeader } from './authHeader';
-import { BehaviorSubject } from 'rxjs';
-
-const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('user')));
 
 export const apartmentService = {
     getAllApatments,
     createApatment,
     getFilteredApartment,
     updateApartmentStatus,
-    currentUser: currentUserSubject.asObservable(),
-    get currentUserValue() { return currentUserSubject.value }
+    deleteApartment
 };
 
 function getAllApatments(sort) {
@@ -19,8 +15,6 @@ function getAllApatments(sort) {
             'Authorization': authHeader.addAuthHeader()
         }
     };
-
-    console.log(sort);
 
     return fetch(`/api/apartment/all?sortBy=${sort}`, requestOptions)
     .then(authHeader.handleResponse)
@@ -52,8 +46,6 @@ function createApatment(apartment, location, imageLinks) {
 
 function getFilteredApartment(apartmentFilter, sort) {
 
-    console.log(sort);
-
     const requestOptions = {
         method: 'POST',
         headers: {
@@ -84,19 +76,24 @@ function updateApartmentStatus(apartmentId, status) {
     .then(response => response.json());
 }
 
-// function getSortedApartments(sort) {
+function deleteApartment(apartmentId) {
 
-// console.log(sort)
+    const accountId =  JSON.parse(localStorage.getItem('user')).id;
 
-//     const requestOptions = {
-//         method: 'GET',
-//         headers: {
-//             'Authorization': authHeader.addAuthHeader(),
-//             'Content-Type': 'application/json'
-//         }
-//     };
+    const account = {
+        id: accountId
+    }
 
-//     return fetch(`/api/apartment/sort?sortBy=${sort}`, requestOptions)
-//     .then(authHeader.handleResponse)
-//     .then(response => response.json());
-// }
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Authorization': authHeader.addAuthHeader(),
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(account)
+    };
+
+    return fetch(`/api/apartment/${apartmentId}/delete`, requestOptions)
+    .then(authHeader.handleResponse)
+    .then(response => response.json());
+}

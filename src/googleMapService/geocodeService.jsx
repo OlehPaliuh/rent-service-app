@@ -25,7 +25,10 @@ function getAutocompleteAdress(address) {
 
 function getPlaceByPlaceId(place_id) {
     const requestOptions = {
-        method: 'GET'
+        method: 'GET',
+        headers: {
+            "X-Requested-With": "XMLHttpRequest"
+        }
     };
 
     var proxyUrl = 'https://cors-anywhere.herokuapp.com/',

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
-import { Col, Row, Button } from 'reactstrap';
+import { Col, Row } from 'reactstrap';
 import { favouriteService } from "../../services/favouriteService";
 import "../../styles/ApartmentCard.css"
 
@@ -17,9 +17,10 @@ class ApartmentCard extends Component {
     componentDidMount() {
         const currentUserId = JSON.parse(localStorage.getItem('user')).id;
              this.state.apartment.favouriteList.map(obj => {
-                if (obj.accountId === currentUserId) {
+                 if (obj.accountId === currentUserId) {
                     this.setState({ isLiked: true });
                 }
+                return true;
             });
     }
 
@@ -54,7 +55,7 @@ class ApartmentCard extends Component {
         return (
             <div className="card apartment-card">
                 {imageLinks.length > 0 &&
-                    <img className="card-img-top card-image" alt="Card image cap" src={imageLinks[0]} />
+                    <img className="card-img-top card-image" alt="Card cap" src={imageLinks[0]} />
                 }
                 <div className="card-body">
                     <h5 className="card-title">{this.state.apartment.title}</h5>

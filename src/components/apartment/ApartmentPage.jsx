@@ -1,10 +1,11 @@
 import React from "react"
-import { Col, Row, Table, Button, ToastHeader, Toast, ToastBody, Label } from 'reactstrap';
+import { Col, Row, Table, Button, Label } from 'reactstrap';
 import MapContainer from '../../googleMapService/MapContainer';
 import ModalComponent from '../modal/ModalComponent';
 import ProfileCard from '../profile/ProfileCard';
 import Lightbox from 'react-image-lightbox';
 import { overviewService } from "../../services/overviewService";
+import { apartmentService } from "../../services/apartmentService";
 import 'react-image-lightbox/style.css';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
@@ -13,7 +14,6 @@ import "../../index.css"
 import "../../styles/LoginStyle.css"
 import "../../styles/ApartmentPage.css"
 import OverviewCard from "../overview/OverviewCard";
-import { Comment, Form, Header } from 'semantic-ui-react'
 import ModalChangeApartmentStatus from "../modal/ModalChangeApartmentStatus";
 import CommentBox from "../comment/CommentBox";
 
@@ -116,10 +116,24 @@ class ApartmentPage extends React.Component {
             if(item.id !== id) {
                 comments.push(item);
             }
+            return true;
         })
         apartmentItem.comments = comments;
 
         this.setState({apartmentItem: apartmentItem});
+    }
+
+    handleDeleteApartment = () => {
+
+        if (!window.confirm('Apartment information will be deleted! Dou you want to continue?')) {
+            return;
+        }
+
+        apartmentService.deleteApartment(this.state.apartmentItem.id)
+            .then(response => {
+                const { from } = this.props.location.state || { from: { pathname: "/" } };
+                this.props.history.push(from);
+            })
     }
 
     handleAddComment = (comment) => {
@@ -169,7 +183,7 @@ class ApartmentPage extends React.Component {
                     modal={this.state.statusModalOpen}
                     status={this.state.apartmentItem.status}
                     onCancel={this.handleStatusModalCancel}
-                    onSubmit={this.hadleStatusChanged}
+                    onStatusChange={this.hadleStatusChanged}
                 />
 
                 <Row>
@@ -237,13 +251,13 @@ class ApartmentPage extends React.Component {
                     </Table>
                 </Row>
                 <ModalComponent
-                    accountId={this.state.apartmentItem.accountId}
                     apartmentId={this.state.apartmentItem.id}
                     modal={this.state.modalOpen}
                     onCancel={this.handleCancel} />
 
                 <div className="map-cont">
                     <MapContainer
+                        isCreatePage = {false}
                         onClick={this.ckick}
                         location={apartmentItem.location}
                         center={{ lat: apartmentItem.location.latitude, lng: apartmentItem.location.longitude }}
@@ -252,6 +266,38 @@ class ApartmentPage extends React.Component {
 
 
                 <Row>
+                    {(!this.state.isApartmentOwner || this.state.overviewRequests.length === 0) && 
+                         <Col>
+
+                         {this.state.photoLoaded && apartmentItem.imageLinks.length > 0 &&
+                             <h4 className="title">Photos</h4>
+                         }
+ 
+                         {this.state.photoLoaded && apartmentItem.imageLinks.length > 0 &&
+ 
+                             <CarouselProvider
+                                 naturalSlideWidth={60}
+                                 naturalSlideHeight={60}
+                                 totalSlides={apartmentItem.imageLinks.length}
+                                 className="sliderContainer"
+                             >
+                                 <Slider
+                                     onClick={() => this.setState({ isOpen: true })}
+                                 >
+                                     {apartmentItem.imageLinks.map(slide =>
+                                         <Slide key={slide}
+                                             index={slide}
+                                         >
+                                             <img src={slide} className="item" alt={slide} />
+                                         </Slide>)}
+                                 </Slider>
+                                 <ButtonBack className="prev-button btn btn-primary">Back</ButtonBack>
+                                 <ButtonNext className="next-button btn btn-primary">Next</ButtonNext>
+                             </CarouselProvider>
+                         }
+                     </Col>
+    }
+                    {this.state.isApartmentOwner && this.state.overviewRequests.length > 0 &&
                     <Col lg={5} ms={6}>
 
                         {this.state.photoLoaded && apartmentItem.imageLinks.length > 0 &&
@@ -281,12 +327,13 @@ class ApartmentPage extends React.Component {
                             </CarouselProvider>
                         }
                     </Col>
+    }
 
                     {this.state.isApartmentOwner && this.state.loadedOverviews && this.state.overviewRequests.length > 0 &&
                         <Col lg={6} ms={6}>
                             <h4 className="title">Active overview requests</h4>
                             <Row>
-                                {this.state.overviewRequests.map(overview => <Col ms={3}><OverviewCard overview={overview} /></Col>)}
+                                {this.state.overviewRequests.map(overview => <Col ms={3}><OverviewCard overview={overview} isApartmentPage={true} /></Col>)}
                             </Row>
                         </Col>
                     }
@@ -303,19 +350,8 @@ class ApartmentPage extends React.Component {
                         />
                 }
 
-                {/* <div className="comments-container">
-        
-                    <Toast className="comment-item">
-                        <ToastHeader>
-                            Reactstrap
-                     </ToastHeader>
-                        <ToastBody>
-                            This is a toast on a white background — check it out!
-                     </ToastBody>
-                    </Toast>
-                </div> */}
-
-
+                {this.state.isApartmentOwner && <div className="delete-apartment"><Button color="danger" onClick={this.handleDeleteApartment}>Delete Apartment</Button>
+                </div> }   
                 {isOpen && (
                     <Lightbox
                         mainSrc={apartmentItem.imageLinks[photoIndex]}

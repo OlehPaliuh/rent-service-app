@@ -1,11 +1,11 @@
 import { authHeader } from './authHeader';
-import { BehaviorSubject } from 'rxjs';
 
 export const overviewService = {
     approveOverviewRequest,
     rejectOverviewRequest,
     requestApartmentOverview,
-    getApartmentOverviewRequests
+    getApartmentOverviewRequests,
+    getAccountOverviewRequests
 };
 
 function requestApartmentOverview(apartmentId, accountId, dateTime, comment) {
@@ -39,11 +39,26 @@ function getApartmentOverviewRequests(apartmentId) {
     .then(response => response.json());
 }
 
+function getAccountOverviewRequests(accoutId) {
+
+    const requestOptions = {
+        method: 'GET',
+        headers: {
+            'Authorization': authHeader.addAuthHeader(),
+            'Content-Type': 'application/json'
+        }
+    };
+
+    return fetch(`/api/overview/account/${accoutId}`, requestOptions)
+    .then(authHeader.handleResponse)
+    .then(response => response.json());
+}
+
 function approveOverviewRequest(overviewId) {
     const currentUserId = JSON.parse(localStorage.getItem('user')).id;
 
     const requestOptions = {
-        method: 'PUT',
+        method: 'POST',
         headers: {
             'Authorization': authHeader.addAuthHeader(),
             'Content-Type': 'application/json'
@@ -60,7 +75,7 @@ function rejectOverviewRequest(overviewId) {
 const currentUserId = JSON.parse(localStorage.getItem('user')).id;
 
     const requestOptions = {
-        method: 'PUT',
+        method: 'POST',
         headers: {
             'Authorization': authHeader.addAuthHeader(),
             'Content-Type': 'application/json'
@@ -72,3 +87,4 @@ const currentUserId = JSON.parse(localStorage.getItem('user')).id;
     .then(authHeader.handleResponse)
     .then(response => response.json());
 }
+

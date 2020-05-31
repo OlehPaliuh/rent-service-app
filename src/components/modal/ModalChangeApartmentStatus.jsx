@@ -7,7 +7,6 @@ class ModalChangeApartmentStatus extends Component {
         super(props);
         this.state = {
             modal: this.props.modal,
-            status: "FREE",
             success: false,
             error: false,
             message: ""
@@ -21,7 +20,7 @@ class ModalChangeApartmentStatus extends Component {
 
     onStatusChange = c => {
         const { value } = c.target;
-        this.setState({ status: value });
+        this.props.onStatusChange(value)
     }
 
     delay = ms => new Promise(res => setTimeout(res, ms));
@@ -31,12 +30,9 @@ class ModalChangeApartmentStatus extends Component {
 
         this.setState({ error: false, success: false, message: "" });
 
-        const { status } = this.state;
-
-
-        apartmentService.updateApartmentStatus(this.props.apartmentId, status)
+        apartmentService.updateApartmentStatus(this.props.apartmentId, this.props.status)
             .then(response => {
-                this.props.onSubmit(response.status)
+                // this.props.onSubmit(response.status)
                 this.setState({ status: response.status, success: true, message: "Status changes" });
             }, error => {
                 this.setState({ error: true, message: "Request failed, try in few minutes" });
@@ -69,12 +65,12 @@ class ModalChangeApartmentStatus extends Component {
                                     type="select"
                                     name="status"
                                     id="status"
-                                    value={status}
+                                    value={this.props.status}
                                     onChange={this.onStatusChange}
                                 >
-                                    <option>FREE</option>
-                                    <option>REVIEW</option>
-                                    <option>RENTED</option>
+                                    <option value="FREE">FREE</option>
+                                    <option value="REVIEW">REVIEW</option>
+                                    <option value="RENTED">RENTED</option>
                                 </Input>
                         </Form>
                     </ModalBody>

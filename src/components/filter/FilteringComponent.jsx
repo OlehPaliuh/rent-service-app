@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Button, Row, Col, Form, Label, Input } from 'reactstrap';
-import { overviewService } from "../../services/overviewService";
 import { Checkbox } from "@material-ui/core";
 import "../../styles/FilteringStyle.css"
 

@@ -14,8 +14,14 @@ export class MapContainer extends Component {
     }
   }
 
+  componentWillMount() {
+    if(!this.props.isCreatePage) {
+    this.setState({initialCenter: this.props.center})
+    }
+  }
+
   render() {
-    const { initialCenter, center } = this.state;
+    const { initialCenter } = this.state;
 
     return (
       <div className="container">
@@ -24,14 +30,18 @@ export class MapContainer extends Component {
           google={this.props.google}
           zoom={9}
           center={this.props.center || this.state.initialCenter}
-          onClick={(t, map, c) => {  this.props.onClick(c.latLng); }}
+          onClick={(t, map, c) => {
+            if (this.props.isCreatePage) {
+              this.props.onClick(c.latLng);
+            }
+          }}
+          onChange={this.handleChange}
           initialCenter={initialCenter}>
           <Marker 
             position={{
               lat: this.props.location.latitude,
               lng: this.props.location.longitude
             }}
-            onClick={() => console.log("You clicked me!")}
           />
         </Map>
       </div>

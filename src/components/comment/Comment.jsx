@@ -1,12 +1,9 @@
 import React, { Component } from "react";
 import Moment from 'moment';
+import { Button } from 'reactstrap';
 import "../../styles/commentStyle/CommentStyle.scss"
 
 class Comment extends Component {
-  constructor(props) {
-    super(props);
-    
-  }
 
   deleteComment = (event) => {
     event.preventDefault();
@@ -28,7 +25,7 @@ class Comment extends Component {
           <p className="comment-body">- {this.props.comment.content}</p>
           <div className="comment-footer">
             {this.props.isOwner &&
-            <a href="#" className="comment-footer-delete" onClick={this.deleteComment}>Delete Comment</a>
+            <Button color="danger" size="sm" className="comment-footer-delete" onClick={this.deleteComment}>Delete Comment</Button>
             }
             </div>
         </div>

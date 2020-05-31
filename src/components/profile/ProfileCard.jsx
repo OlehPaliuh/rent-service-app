@@ -18,9 +18,6 @@ class ProfileCard extends Component {
     }
 
     componentDidMount() {
-        console.log("isApartmentOwner")
-        console.log(this.props.isApartmentOwner)
-
         this.setState({ loading: true });
         this.fetchAccountDetails();
     }
@@ -53,7 +50,7 @@ class ProfileCard extends Component {
 
         return (
             <div className="card profile-card">
-                <img className="profile-card-image" alt="Profile image" src={this.state.account.image || "/images/profile.png"} />
+                <img className="profile-card-image" alt="Profile avatar" src={this.state.account.avatarPath || "/images/profile.png"} />
                 <div className="card-body">
                     <h6 className="profile-title profile-card-title">
                         <span>{this.state.account.firstName} </span>
@@ -66,7 +63,6 @@ class ProfileCard extends Component {
                     accountToId={this.state.accountId}
                     modal={this.state.modalComplainOpen}
                     onCancel={this.handleCreateComplainCancel} 
-                    // onSubmit={this.hadleStatusChanged} 
                     />
                     
                     {isOnline &&

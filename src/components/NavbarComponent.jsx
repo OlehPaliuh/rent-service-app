@@ -1,14 +1,12 @@
 import React, { Component } from "react"
 import { Link } from 'react-router-dom';
-import { Navbar, Button, NavbarBrand, NavLink, FormGroup, Form } from 'reactstrap'
+import { Navbar, Button, NavbarBrand, NavLink, Form } from 'reactstrap'
 import { userService } from "../services/userService";
 import "../index.css"
 
 class NavbarComponent extends Component {
     constructor(props) {
         super(props);
-
-        console.log(this.props.item);
 
         this.state = {
             isSearchPageOpened: this.props.item || false,
@@ -60,7 +58,7 @@ class NavbarComponent extends Component {
                         </li>
                     </ul>
                     <Link to={`/profile`} >
-                        <img src="/images/profile_navBar_icon.png" className="nav-bar-profile-icon" />
+                        <img src="/images/profile_navBar_icon.png" className="nav-bar-profile-icon" alt="profile icon" />
                     </Link>
                     {!this.state.isSearchPageOpened &&
                         <Form className="form-inline my-2 my-lg-1" onSubmit={this.handleSearch}>

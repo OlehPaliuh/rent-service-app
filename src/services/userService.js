@@ -11,6 +11,7 @@ export const userService = {
     getUserDetails,
     getOwnerAccountDetails,
     updateAccount,
+    deleteOwnAccount,
     currentUser: currentUserSubject.asObservable(),
     get currentUserValue() { return currentUserSubject.value }
 };
@@ -21,8 +22,6 @@ function login(username, password) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
     };
-
-    console.log("Before login ")
 
     return fetch("/api/authenticate", requestOptions)
         .then(authHeader.handleAuthenticateResponse)
@@ -40,6 +39,8 @@ function login(username, password) {
 
 function logout() {
     // remove user from local storage to log user out
+    localStorage.removeItem('sortBy');
+    localStorage.removeItem('filter');
     localStorage.removeItem('user');
 }
 
@@ -121,6 +122,20 @@ function getAll() {
 
     return fetch("/api/admin/all_users", requestOptions)
         .then(authHeader.handleResponse);
+}
+
+function deleteOwnAccount(accountId, reason) {
+
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Authorization': authHeader.addAuthHeader(),
+        }
+    };
+
+    return fetch(`/api/user/account/${accountId}/deleteOwnAccount?reason=${reason}`, requestOptions)
+        .then(authHeader.handleResponse)
+        .then(response => response.json());
 }
 
 

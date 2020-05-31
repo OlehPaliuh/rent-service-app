@@ -48,3 +48,8 @@
 .comment-item{
     min-width: 50%;
 }
+
+.delete-apartment{
+    text-align: center;
+    margin-bottom: 25px;
+}

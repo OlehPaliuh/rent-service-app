@@ -26,7 +26,6 @@ class CommentBox extends Component {
     render () {
       let commentNodes;
       let buttonText = 'Show Comments';
-      const { comments } = this.state;
 
       if (this.state.showComments) {
         buttonText = 'Hide Comments';
@@ -47,15 +46,6 @@ class CommentBox extends Component {
         </div>  
       );
     }
-    
-    // _addComment(author, body) {
-    //   const comment = {
-    //     id: this.state.comments.length + 1,
-    //     author,
-    //     body
-    //   };
-    //   this.setState({ comments: this.state.comments.concat([comment]) }); // *new array references help React stay fast, so concat works better than push here.
-    // }
     
     handleClick = () => {
       this.setState({
@@ -99,6 +89,5 @@ class CommentBox extends Component {
       }
     }
   }
-  
 
   export default CommentBox;

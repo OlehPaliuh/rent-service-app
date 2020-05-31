@@ -1,21 +1,25 @@
 import React, { Component } from 'react';
 import { Button, Form, Modal, Input, ModalHeader, ModalBody, ModalFooter, Label } from 'reactstrap';
 import DateTimePicker from 'react-datetime-picker';
-import { apartmentService } from "../../services/apartmentService";
-import { wait } from '@testing-library/react';
 import { overviewService } from '../../services/overviewService';
+import moment from "moment-timezone";
 
 class ModalComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
             modal: this.props.modal,
+            accountId: JSON.parse(localStorage.getItem('user')).id,
             date: new Date(),
             success: false,
             error: false,
             message: "",
             comment: ""
         }
+    }
+
+    componentWillMount() {
+        moment.tz.setDefault("Ukraine/Lviv");
     }
 
     toggle = () => {
@@ -25,7 +29,6 @@ class ModalComponent extends Component {
 
     onDateChange = d => {
         this.setState({ date: d });
-        console.log(this.state.date);
     }
 
     onCommentChange = c => {
@@ -47,7 +50,7 @@ class ModalComponent extends Component {
             return;
         }
 
-        overviewService.requestApartmentOverview(this.props.apartmentId, this.props.accountId, date, comment)
+        overviewService.requestApartmentOverview(this.props.apartmentId, this.state.accountId, date, comment)
             .then(response => {
                 this.setState({ success: true, message: "Request created" });
             }, error => {
@@ -79,6 +82,7 @@ class ModalComponent extends Component {
                         <Form onSubmit={this.handleSubmit}>
                             <Label>Chose date and time to overview the apartment</Label>
                             <DateTimePicker
+                                dateFormat="YYYY-MM-DDThh:mm:ss"
                                 onChange={this.onDateChange}
                                 value={this.state.date}
                             />

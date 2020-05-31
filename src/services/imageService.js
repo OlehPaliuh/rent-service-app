@@ -43,7 +43,7 @@ function updateProfileImage(file) {
         body: formData
     };
 
-    return fetch(`api/image/${accountId}/updateAvatar`, requestOptions)
+    return fetch(`/api/user/account/${accountId}/updateAvatar`, requestOptions)
     .then(authHeader.handleResponse)
     .then(response => response.json());
 }

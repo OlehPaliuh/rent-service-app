@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { Link } from 'react-router-dom';
-import { Form, FormGroup, PaginationLink, Col, Row, Button } from 'reactstrap';
+import { Col, Row, Button } from 'reactstrap';
 import ApartmentCard from '../apartment/ApartmentCard'
 import { imageService } from "../../services/imageService";
 import { userService } from "../../services/userService";
+import OverviewCard from "../overview/OverviewCard";
+import { overviewService } from "../../services/overviewService";
 import "../../styles/ProfilePage.css"
 
 class ProfilePage extends Component {
@@ -15,13 +16,15 @@ class ProfilePage extends Component {
             loaded: false,
             ownList: [],
             favouriteList: [],
-            avatarImage: ""
+            avatarImage: "",
+            overviewRequests: []
         }
     }
 
     componentDidMount() {
         this.setState({ loaded: false });
         this.fetchOwnerAccountDetails();
+        this.fetchAccountOverviewRequests();
     }
 
     handleUpdateAvatar = () => {
@@ -41,6 +44,16 @@ class ProfilePage extends Component {
         }
     }
 
+    fetchAccountOverviewRequests = () => {
+        this.setState({ loadedOverviews: false });
+        overviewService.getAccountOverviewRequests(this.state.accountId)
+            .then(result => {
+                this.setState({ overviewRequests: result });
+            },
+                error => this.setState({ error })
+            );
+    }
+
     fetchOwnerAccountDetails = () => {
         userService.getOwnerAccountDetails(this.state.accountId)
             .then(result => {
@@ -55,12 +68,30 @@ class ProfilePage extends Component {
         this.props.history.push(from); 
     }
 
+    handleDeleteAccount = () => {
+
+        if (!window.confirm('Account information will be deleted! Dou you want to continue?')) {
+            return;
+        }
+
+        const reason = "Is deleted by owner";
+
+        userService.deleteOwnAccount(this.state.accountId, reason)
+            .then(response => {
+                userService.logout();
+                window.location.reload(false);
+            })
+    }
+
     render() {
 
+        const favouriteList = [];
+
+        const ownList = [];
+
         if (this.state.loaded) {
-            this.state.account.ownApartmentList.map(item => this.state.ownList.push(<ApartmentCard key={item.id} apartment={item} />));
-            console.log("Favourite");
-            this.state.account.favouriteList.map(favourite => this.state.favouriteList.push(<ApartmentCard key={favourite.apartment.id} apartment={favourite.apartment} />));
+            this.state.account.ownApartmentList.map(item => ownList.push(<ApartmentCard key={item.id} apartment={item} />));
+            this.state.account.favouriteList.map(favourite => favouriteList.push(<ApartmentCard key={favourite.apartment.id} apartment={favourite.apartment} />));
         }
 
         return (
@@ -106,26 +137,35 @@ class ProfilePage extends Component {
                             </Col>
                         </Row>
                     }
-                    {this.state.loaded && this.state.ownList.length > 0 &&
+                    {this.state.loaded && ownList.length > 0 &&
                         <div>
                             <h2 className="title">Own apartment list</h2>
 
                             <Row >
-                                {this.state.ownList.map(app => <Col className="" md={4} lg={4}> {app} </Col>)}
+                                {ownList.map(app => <Col className="" md={4} lg={4}> {app} </Col>)}
                             </Row>
                         </div>
                     }
 
-                    {this.state.loaded && this.state.favouriteList.length > 0 &&
+                    {this.state.loaded && favouriteList.length > 0 &&
                         <div>
                             <h2 className="title">Favourite list</h2>
                             
                             <Row >
-                                {this.state.favouriteList.map(app => <Col className="" md={4} lg={4}> {app} </Col>)}
+                                {favouriteList.map(app => <Col className="" md={4} lg={4}> {app} </Col>)}
                             </Row>
                         </div>
                     }
-                    {this.state.loaded && console.log(this.state.account)}
+
+                        { this.state.overviewRequests && this.state.overviewRequests.length > 0 &&
+                            <Row>
+                            <h4 className="title">Overview requests</h4>
+                                {this.state.overviewRequests.map(overview => <Col ms={3} lg={3}><OverviewCard overview={overview} /></Col>)}
+                            </Row>
+                    }
+
+                    {this.state.accountId && <div className="delete-account"><Button color="danger" onClick={this.handleDeleteAccount}>Delete Account</Button>
+                    </div> }
                 </div>
             </div>
         )

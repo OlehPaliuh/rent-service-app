@@ -65,7 +65,7 @@ class CreateApatmentComponent extends React.Component {
     }
 
     handleCheckboxChange = e => {
-        const { name, value } = e.target;
+        const { name } = e.target;
 
         const apartmentObj = this.state.apartment;
 
@@ -105,7 +105,8 @@ class CreateApatmentComponent extends React.Component {
                 this.setState({ fileLinks: [], files: [] });
             }, error => {
                 console.error("Failed delete image")
-            });});
+            });
+        return true});
 
         if (apartment.title || apartment.description || apartment.address) {
             if(!window.confirm('Your data wil be lost, do you want to continue?')) {
@@ -169,7 +170,7 @@ class CreateApatmentComponent extends React.Component {
         }
 
         if (apartment.price < 1 || apartment.livingArea < 1 || apartment.numberOfRooms < 1) {
-            this.setState({ error: "Fields should be positive and less than 1 000 000", loading: false })
+            this.setState({ error: "Fields should be positive", loading: false })
             return;
         }
 
@@ -196,7 +197,6 @@ class CreateApatmentComponent extends React.Component {
         const { files } = this.state;
         const { fileLinks } = this.state;
 
-        console.log(files.length);
         if ((files.length + filesToSate.length) < 8) {
             filesToSate.map(file => files.push(file));
             this.setState({ files: files });
@@ -214,15 +214,15 @@ class CreateApatmentComponent extends React.Component {
 
     handleImageDelete = (e) => {
         const { value } = e.target;
-        console.log(value)
         const { fileLinks } = this.state;
         imageService.deleteImage(value)
             .then(response => {
-                console.error(response)
                 const resultFiles = [];
                 fileLinks.map(item => {
-                    if (item !== value)
+                    if (item !== value) {
                         resultFiles.push(item);
+                    }
+                    return true;
                 })
                 this.setState({ fileLinks: resultFiles });
             }, error => {
@@ -444,6 +444,7 @@ class CreateApatmentComponent extends React.Component {
                         <MapContainer
                             onClick={this.handleMapChange}
                             location={this.state.apartmentLocation}
+                            isCreatePage={true}
                         />
                         {submitted && !apartmentLocation.fullAddress &&
                             <div className="alert alert-warning help-block">Address is required</div>

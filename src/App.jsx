@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import HomeComponent from './components/HomeComponent'
 import ApartmentPage from "./components/apartment/ApartmentPage"
-import AboutComponent from "./components/AboutComponent"
 import LoginComponent from "./components/LoginComponent"
 import { PrivateRoute } from "./components/PrivateRoute"
 import { Route, Switch } from 'react-router-dom';
@@ -45,7 +44,6 @@ class App extends Component {
           <Route path="/register" component={RegisterComponent} />
           <PrivateRoute path="/profile" component={ProfilePage} />
           <PrivateRoute path="/edit/:id" component={EditProfilePage} />
-          <PrivateRoute path="/about" component={AboutComponent} />
           <Route path="/search" render={(props) => <SearchResultComponent {...props} onOpen={this.searchPageOpened} />} />
           <PrivateRoute exact path="/apartment/create" component={CreateApatmentComponent} />
           <PrivateRoute path="/apartment/:id" component={ApartmentPage} />

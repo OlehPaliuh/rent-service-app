@@ -1,5 +1,4 @@
 import { authHeader } from './authHeader';
-import { BehaviorSubject } from 'rxjs';
 
 export const complaintService = {
     createComplaint
