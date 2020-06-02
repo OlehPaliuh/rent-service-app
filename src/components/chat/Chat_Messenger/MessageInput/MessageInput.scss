@@ -1,0 +1,63 @@
+.compose {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-top: 1px solid #eeeef1;
+  position: relative;
+  width: 100%;
+  bottom: 0;
+}
+
+@supports (backdrop-filter: blur(20px)) {
+  .compose {
+    border: none;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+  }
+}
+
+.message-input-form {
+
+}
+
+.compose-input {
+  display: block;
+  flex: 1;
+  font-size: 14px;
+  height: 40px;
+  background: none;
+  padding-left: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 3%;
+}
+
+.compose-input::placeholder {
+  opacity: 0.3;
+}
+
+.compose-btn {
+  background: #007aff;
+  color: #fff;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover, &:focus {
+    opacity: 0.7;
+    background: #007aff;
+    i{
+      color: #fff;
+    }
+  }
+}
+
+.compose .toolbar-button {
+  color: #bbbbbf;
+  margin-left: 15px;
+}
+
+.compose .toolbar-button:hover {
+  color: #99999c;
+}

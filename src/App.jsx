@@ -12,6 +12,7 @@ import CreateApatmentComponent from './components/CreateApartmentComponent';
 import SearchResultComponent from './components/SearchResultComponent';
 import ProfilePage from './components/profile/ProfilePage';
 import EditProfilePage from './components/profile/EditProfilePage';
+import ChatPage from './components/chat/ChatPage';
 
 class App extends Component {
   constructor(props) {
@@ -42,7 +43,9 @@ class App extends Component {
           <PrivateRoute exact path="/" component={HomeComponent} />
           <Route path="/login" component={LoginComponent} />
           <Route path="/register" component={RegisterComponent} />
-          <PrivateRoute path="/profile" component={ProfilePage} />
+          <Route path="/profile" component={ProfilePage} />
+          <Route path="/chat/:chatId" name="ChatPage" render={props => <ChatPage {...props}/>} />
+          <Route path="/chat" name="ChatPage" render={props => <ChatPage {...props}/>} />
           <PrivateRoute path="/edit/:id" component={EditProfilePage} />
           <Route path="/search" render={(props) => <SearchResultComponent {...props} onOpen={this.searchPageOpened} />} />
           <PrivateRoute exact path="/apartment/create" component={CreateApatmentComponent} />

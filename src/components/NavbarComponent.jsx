@@ -2,6 +2,8 @@ import React, { Component } from "react"
 import { Link } from 'react-router-dom';
 import { Navbar, Button, NavbarBrand, NavLink, Form } from 'reactstrap'
 import { userService } from "../services/userService";
+import { Redirect} from "react-router-dom";
+import { messengerService } from '../services/messengerService';
 import "../index.css"
 
 class NavbarComponent extends Component {
@@ -40,9 +42,26 @@ class NavbarComponent extends Component {
         window.location.href = `/search?q=${searchString}`;
     }
 
+    getSupportChat = () => {
+        messengerService.getOrCreateChat("support").then(chat => {
+          this.setState({
+            ...this.state,
+            chatId: chat.id,
+            toMessenger: true
+          })
+        })
+      }
+
     render() {
 
         const { searchString } = this.state;
+
+        if (this.state.toMessenger === true) {
+            let url = '/chat/' + this.state.chatId;
+            // const { from } = this.props.location.state || { from: { pathname: `/edit/${this.state.accountId}` } };
+                // this.props.history.push(from);
+            return <Redirect to={url}/>
+          }
 
         return (
             <Navbar className="navbar navbar-expand-lg navbar-expand-sm navbar-dark bg-dark">
@@ -55,6 +74,11 @@ class NavbarComponent extends Component {
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item active">
                             <NavLink href="/">Home <span className="sr-only">(current)</span></NavLink>
+                        </li>
+                        <li className="nav-item active">
+                        <NavLink href="/chat">Messenger <span className="sr-only">(current)</span></NavLink>
+
+                        {/* <Button onClick={this.getSupportChat}>Messenger <span className="sr-only">(current)</span></Button> */}
                         </li>
                     </ul>
                     <Link to={`/profile`} >

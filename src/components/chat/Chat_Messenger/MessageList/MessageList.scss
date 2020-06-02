@@ -1,0 +1,19 @@
+.message-list-container {
+  padding: 10px;
+  padding-bottom: 15px;
+}
+.message-list{
+  min-height: 91%;
+}
+
+.scrollable {
+  position: relative;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+.content {
+  background: white;
+  grid-row-start: 1;
+  grid-row-end: span 3;
+}
+

@@ -1,8 +1,10 @@
 import React, { Component } from "react";
+import { Redirect} from "react-router-dom";
 import { Button, Alert, Row, Col } from 'reactstrap';
 import { userService } from "../../services/userService";
 import ModalCreateComplain from "../modal/ModalCreateComplain";
 import Moment from 'moment';
+import { messengerService } from '../../services/messengerService';
 import "../../styles/ProfileCard.css"
 
 class ProfileCard extends Component {
@@ -10,6 +12,7 @@ class ProfileCard extends Component {
         super(props);
         this.state = {
             accountId: this.props.id,
+            currentUser: JSON.parse(localStorage.getItem('user')),
             account: {},
             loading: false,
             modalOpen: true,
@@ -21,6 +24,10 @@ class ProfileCard extends Component {
         this.setState({ loading: true });
         this.fetchAccountDetails();
     }
+
+    // getCurrentUsername = () => {
+    //     return JSON.parse(localStorage.getItem('user')).username;
+    // }
 
     fetchAccountDetails = () => {
         userService.getUserDetails(this.props.id)
@@ -35,18 +42,41 @@ class ProfileCard extends Component {
         this.setState({ modalOpen: true });
     }
 
-     handleCreateComplainCancel = () => {
+    handleCreateComplainCancel = () => {
         this.setState({ modalComplainOpen: false });
     }
 
-     handleCreateComplain = () => {
+    handleCreateComplain = () => {
         this.setState({ modalComplainOpen: true });
     }
+
+    createChat(withUsername) {
+        messengerService.getOrCreateChat(withUsername).then(chat => {
+          this.setState({
+            ...this.state,
+            chatId: chat.id,
+            toMessenger: true
+          })
+        })
+      }
+
+    // handleChatClick = () => {
+    //     const { from } = this.props.location.state || { from: { pathname: `/edit/${this.state.accountId}` } };
+    //     this.props.history.push(from);
+    // }
 
     render() {
         const date = new Date(this.state.account.lastLoginTime);
         const formattedDate = Moment(date).format('LLL');
         const isOnline = this.state.account.isOnline;
+
+        if (this.state.toMessenger === true) {
+            let url = '/chat/' + this.state.chatId;
+            console.log("redirect to " + url);
+            // const { from } = this.props.location.state || { from: { pathname: `/edit/${this.state.accountId}` } };
+                // this.props.history.push(from);
+            return <Redirect to={url}/>
+          }
 
         return (
             <div className="card profile-card">
@@ -58,13 +88,13 @@ class ProfileCard extends Component {
                     </h6>
                     <h6 className="card-title profile-card-title">Email:  {this.state.account.email}</h6>
                     <h6 className="card-title profile-card-title">Phone:  {this.state.account.phoneNumber}</h6>
-                    
+
                     <ModalCreateComplain
-                    accountToId={this.state.accountId}
-                    modal={this.state.modalComplainOpen}
-                    onCancel={this.handleCreateComplainCancel} 
+                        accountToId={this.state.accountId}
+                        modal={this.state.modalComplainOpen}
+                        onCancel={this.handleCreateComplainCancel}
                     />
-                    
+
                     {isOnline &&
                         <h6 className="card-title profile-card-title">Status: Online</h6>
                     }
@@ -81,6 +111,12 @@ class ProfileCard extends Component {
                                 <Alert color="warning" className="makler-warning">
                                     Can be a makler</Alert>
                             }
+                    <Row className="messenger-btn">
+                                <Button color="primary" className="request-ovwerview-btn" onClick={() => this.createChat(this.state.account.username)}>
+                                    Write a message
+                        </Button>
+                            </Row>
+
                             <Row>
                                 <Col>
                                     <Button color="primary" className="request-ovwerview-btn" onClick={this.props.requestReview}>
@@ -93,9 +129,6 @@ class ProfileCard extends Component {
                         </Button>
                                 </Col>
                             </Row>
-
-
-
                         </div>
                     }
                 </div>
