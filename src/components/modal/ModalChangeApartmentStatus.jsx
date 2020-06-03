@@ -44,7 +44,7 @@ class ModalChangeApartmentStatus extends Component {
 
     render() {
 
-        const { error, message, success, status } = this.state;
+        const { error, message, success } = this.state;
 
         return (
             <div>

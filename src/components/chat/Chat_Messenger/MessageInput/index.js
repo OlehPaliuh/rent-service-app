@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import './MessageInput.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export default class MessageInput extends Component {
   constructor(props) {
@@ -41,8 +40,6 @@ export default class MessageInput extends Component {
         />
         <button className={"compose-btn"} onClick={() => this.send()}>
           send
-            {/* <FontAwesomeIcon icon="coffee"/> */}
-          {/* <i class="fas fa-chevron-right d-block"></i> */}
         </button>
 
       </div>

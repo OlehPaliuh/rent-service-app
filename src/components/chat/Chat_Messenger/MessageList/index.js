@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import MessageInput from '../MessageInput';
 import Toolbar from '../Toolbar';
 import ToolbarButton from '../ToolbarButton';

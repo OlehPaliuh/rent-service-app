@@ -2,14 +2,13 @@ import React, {useEffect} from 'react';
 import shave from 'shave';
 
 import './Chat.scss';
-import {DropdownToggle} from "reactstrap";
 
 export default function Chat(props) {
   useEffect(() => {
     shave('.conversation-snippet', 40);
   })
 
-  const {photo, chatName, lastMessage, active} = props;
+  const { chatName, lastMessage, active} = props;
 
   const chatImage = (chatName === "Support support") ? '/images/support.png' : '/images/profile_navBar_icon.png'
 

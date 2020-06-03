@@ -1,9 +1,7 @@
-import React, {useState, useEffect, Component} from 'react';
-import ChatSearch from '../ChatSearch';
+import React, { Component} from 'react';
 import Chat from '../ChatListItem';
 import Toolbar from '../Toolbar';
 import ToolbarButton from '../ToolbarButton';
-import axios from 'axios';
 
 import './ChatList.scss';
 

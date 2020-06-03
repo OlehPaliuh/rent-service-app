@@ -144,7 +144,6 @@ class Messenger extends Component {
   }
 
   changeCurrentChat = (chat) => {
-    this.state.currentChat = chat;
     this.setState({
       ...this.state,
       currentChat: chat
